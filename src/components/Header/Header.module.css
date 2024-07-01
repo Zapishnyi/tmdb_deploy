@@ -56,9 +56,7 @@
     .container .deskTopSearch {
         display: none;
     }
-}
 
-@media (width < 800px) {
     .container .logo img {
         width: 100px;
     }
