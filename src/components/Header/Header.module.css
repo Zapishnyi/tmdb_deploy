@@ -15,14 +15,14 @@
         justify-content: space-between;
         align-items: center;
 
-        >:nth-child(2) {
+        >div:nth-child(2) {
             @media (width < 800px) {
                 display: none;
             }
         }
 
-        >:nth-child(3) {
-            @media (width >=799px) {
+        >div:nth-child(3) {
+            @media (width >=800px) {
                 display: none;
             }
         }
