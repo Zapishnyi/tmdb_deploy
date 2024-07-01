@@ -15,13 +15,13 @@
         justify-content: space-between;
         align-items: center;
 
-        >div:nth-child(2) {
+        .mobileSearch {
             @media (width < 800px) {
                 display: none;
             }
         }
 
-        >div:nth-child(3) {
+        .deskTopSearch {
             @media (width >=800px) {
                 display: none;
             }
