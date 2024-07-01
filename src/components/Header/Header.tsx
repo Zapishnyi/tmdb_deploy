@@ -21,8 +21,13 @@ const Header: FC = () => {
             alt="Logo"
           />
         </Link>
-        <SearchMenuButtonMobile />
-        <SearchComponent />
+        <div className={styles.mobileSearch}>
+          <SearchMenuButtonMobile />
+        </div>
+        <div className={styles.deskTopSearch}>
+          <SearchComponent />
+        </div>
+
         <div className={styles.themeUserContainer}>
           <ColorThemeToggle />
           <UserInfo />
