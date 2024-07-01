@@ -59,7 +59,7 @@
 }
 
 @media (width < 800px) {
-    .container .logo {
+    .container .logo img {
         width: 100px;
     }
 }
