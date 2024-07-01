@@ -22,7 +22,7 @@ const MovieInfo: FC = () => {
 
   useEffect(() => {
     if (!chosenMovie) {
-      navigate("/movies");
+      navigate("/tmdb_deploy/movies");
     }
   }, []);
 
@@ -35,7 +35,10 @@ const MovieInfo: FC = () => {
 
   return (
     <div className={styles.base}>
-      <div className={styles.backButton} onClick={() => navigate("/movies")}>
+      <div
+        className={styles.backButton}
+        onClick={() => navigate("/tmdb_deploy/movies")}
+      >
         <BackButton />
       </div>
       {chosenMovie && (

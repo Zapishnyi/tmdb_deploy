@@ -7,7 +7,7 @@ const ErrorPage: FC = () => {
     <div className={styles.errorPageWrapper}>
       <h1>Something went wrong, this page doesn't exist</h1>
       <div>
-        <Link to={"/movies"}>Return to HOME Page</Link>
+        <Link to={"/tmdb_deploy/movies"}>Return to HOME Page</Link>
       </div>
     </div>
   );

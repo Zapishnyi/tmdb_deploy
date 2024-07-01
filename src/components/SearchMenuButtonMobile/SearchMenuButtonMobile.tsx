@@ -8,7 +8,7 @@ const SearchMenuButtonMobile: FC = () => {
   return (
     <div
       onClick={() => {
-        navigate("/search");
+        navigate("/tmdb_deploy/search");
       }}
       className={styles.burgerMenu}
     >

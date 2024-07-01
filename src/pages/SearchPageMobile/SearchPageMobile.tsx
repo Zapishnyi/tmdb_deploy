@@ -8,7 +8,7 @@ const SearchPageMobile = () => {
 
   window.addEventListener("resize", () => {
     if (window.innerWidth >= 800 && window.location.pathname === "/search") {
-      navigate("/movies");
+      navigate("/tmdb_deploy/movies");
     }
   });
 

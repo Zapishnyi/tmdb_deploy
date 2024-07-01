@@ -14,7 +14,7 @@ const Header: FC = () => {
   return (
     <div className={styles.header}>
       <div className={styles.container}>
-        <Link to={"/movies"}>
+        <Link to={"/tmdb_deploy/movies"}>
           <img
             className={styles.logo}
             src={require("../../assets/images/TMDB_logo.png")}

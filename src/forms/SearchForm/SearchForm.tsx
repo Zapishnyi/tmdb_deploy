@@ -17,7 +17,7 @@ const SearchForm: FC = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const { genres, movieSearchName, chosenGenresId } = useAppSelector(
-    (state) => state.Search,
+    (state) => state.Search
   );
   const genresBoolean = genres
     .filter((e) => chosenGenresId.includes(e.id))
@@ -31,20 +31,20 @@ const SearchForm: FC = () => {
     dispatch(setChosenPage(1));
     dispatch(SearchActions.setMovieSearchName(formData.movieSearchName));
 
-    navigate("/movies");
+    navigate("/tmdb_deploy/movies");
   };
 
   const genreChoiceNone = () => {
     dispatch(setChosenPage(1));
     dispatch(SearchActions.setChosenGenresId([]));
     for (let item of Array.from(
-      document.getElementsByClassName(styles.genreInput),
+      document.getElementsByClassName(styles.genreInput)
     ) as HTMLInputElement[]) {
       item.checked = false;
     }
 
     if (location.pathname !== "/movies") {
-      navigate("/movies");
+      navigate("/tmdb_deploy/movies");
     }
   };
 
@@ -59,12 +59,12 @@ const SearchForm: FC = () => {
       SearchActions.setChosenGenresId(
         chosenGenresId.includes(chosenGenreId)
           ? chosenGenresId.filter((e) => e !== chosenGenreId)
-          : chosenGenresIdUpdated,
-      ),
+          : chosenGenresIdUpdated
+      )
     );
 
     if (location.pathname !== "/movies") {
-      navigate("/movies");
+      navigate("/tmdb_deploy/movies");
     }
   };
 
