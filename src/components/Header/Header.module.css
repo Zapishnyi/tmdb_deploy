@@ -19,13 +19,7 @@
             padding: 0;
         }
 
-        .logo {
-            @media (width < 800px) {
-                width: 100px;
-            }
 
-            */
-        }
 
         .themeUserContainer {
             display: flex;
@@ -62,4 +56,12 @@
     .container .deskTopSearch {
         display: none;
     }
+}
+
+@media (width < 800px) {
+    .container .logo {
+        width: 100px;
+    }
+
+
 }
