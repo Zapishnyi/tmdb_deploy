@@ -15,14 +15,14 @@
         justify-content: space-between;
         align-items: center;
 
-        >.mobileSearch {
-            @media (max-width : 800px) {
+        >:nth-child(2) {
+            @media (width < 800px) {
                 display: none;
             }
         }
 
-        >.deskTopSearch {
-            @media (min-width: 799px) {
+        >:nth-child(3) {
+            @media (width >=799px) {
                 display: none;
             }
         }
