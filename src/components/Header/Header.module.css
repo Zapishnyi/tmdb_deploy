@@ -1,7 +1,7 @@
 .header {
     z-index: 25;
     box-shadow: 0 0 5px #d3d3d3;
-    height: 10vh;
+    height: 10dvh;
     background: var(--background_color_darker);
     display: flex;
     flex-direction: column;
