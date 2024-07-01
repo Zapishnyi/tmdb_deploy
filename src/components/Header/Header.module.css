@@ -19,12 +19,13 @@
             padding: 0;
         }
 
-        /* a>.logo {
+        .logo {
             @media (width < 800px) {
                 width: 100px;
-            } */
+            }
 
-        /* } */
+            */
+        }
 
         .themeUserContainer {
             display: flex;
