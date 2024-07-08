@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/tmdb_deploy/static/css/main.162f4548.css",
-    "main.js": "/tmdb_deploy/static/js/main.f4ef8a41.js",
+    "main.js": "/tmdb_deploy/static/js/main.828663e0.js",
     "static/media/user-profile.png": "/tmdb_deploy/static/media/user-profile.d203a99e24cef938832d.png",
     "static/media/image_not_found.jpg": "/tmdb_deploy/static/media/image_not_found.0d2a2f316980af5711a3.jpg",
     "index.html": "/tmdb_deploy/index.html",
     "main.162f4548.css.map": "/tmdb_deploy/static/css/main.162f4548.css.map",
-    "main.f4ef8a41.js.map": "/tmdb_deploy/static/js/main.f4ef8a41.js.map"
+    "main.828663e0.js.map": "/tmdb_deploy/static/js/main.828663e0.js.map"
   },
   "entrypoints": [
     "static/css/main.162f4548.css",
-    "static/js/main.f4ef8a41.js"
+    "static/js/main.828663e0.js"
   ]
 }
