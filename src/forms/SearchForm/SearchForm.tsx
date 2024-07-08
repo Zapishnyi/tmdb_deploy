@@ -31,7 +31,7 @@ const SearchForm: FC = () => {
     dispatch(setChosenPage(1));
     dispatch(SearchActions.setMovieSearchName(formData.movieSearchName));
 
-    navigate("/tmdb_deploy/movies");
+    navigate("/movies");
   };
 
   const genreChoiceNone = () => {
@@ -44,7 +44,7 @@ const SearchForm: FC = () => {
     }
 
     if (location.pathname !== "/movies") {
-      navigate("/tmdb_deploy/movies");
+      navigate("/movies");
     }
   };
 
@@ -64,7 +64,7 @@ const SearchForm: FC = () => {
     );
 
     if (location.pathname !== "/movies") {
-      navigate("/tmdb_deploy/movies");
+      navigate("/movies");
     }
   };
 

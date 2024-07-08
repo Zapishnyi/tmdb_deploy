@@ -10,8 +10,6 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <Provider store={store}>
-    <HashRouter>
-      <RouterProvider router={routerConfig} />
-    </HashRouter>
+    <RouterProvider router={routerConfig} />
   </Provider>
 );

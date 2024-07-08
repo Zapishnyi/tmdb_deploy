@@ -18,7 +18,7 @@ const MovieListCard: FC<IProps> = ({ movie }) => {
 
   const movieChoseHandler = () => {
     dispatch(MoviesActions.setChosenMovie(movie));
-    navigate("/tmdb_deploy/movieInfo");
+    navigate("/movieInfo");
   };
 
   return (
