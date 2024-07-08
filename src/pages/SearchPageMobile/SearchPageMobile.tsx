@@ -7,7 +7,7 @@ const SearchPageMobile = () => {
   const navigate = useNavigate();
 
   window.addEventListener("resize", () => {
-    if (window.innerWidth >= 800 && window.location.pathname === "/search") {
+    if (window.innerWidth >= 800 && window.location.hash === "/search") {
       navigate("/movies");
     }
   });
