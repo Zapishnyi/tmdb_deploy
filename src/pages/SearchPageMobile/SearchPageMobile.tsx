@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const SearchPageMobile = () => {
   const navigate = useNavigate();
-  console.log(window.location.hash);
+
   window.addEventListener("resize", () => {
     if (window.innerWidth >= 800 && window.location.hash === "#/search") {
       navigate("/movies");
