@@ -7,23 +7,23 @@ import ErrorPage from "../pages/ErrorPage/ErrorPage";
 
 export const routerConfig = createBrowserRouter([
   {
-    path: "",
+    path: "/tmdb_deploy",
     element: <MainLayout />,
     children: [
       {
         index: true,
-        element: <Navigate to={"/movies"} />,
+        element: <Navigate to={"/tmdb_deploy/movies"} />,
       },
       {
-        path: "/movies",
+        path: "/tmdb_deploy/movies",
         element: <MoviesList />,
       },
       {
-        path: "/movieInfo",
+        path: "/tmdb_deploy/movieInfo",
         element: <MovieInfo />,
       },
       {
-        path: "/search",
+        path: "/tmdb_deploy/search",
         element: <SearchPageMobile />,
       },
     ],
