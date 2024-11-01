@@ -6,6 +6,7 @@ import styles from "./MoviesList.module.css";
 import {setChosenPage} from "../../redux/Slices/chosenPageSlice";
 import {debounce} from "lodash";
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
+import {setObserverPosition, setScrollPosition} from "../../redux/Slices/paginationSlice";
 
 const observeOption: IntersectionObserverInit = {
     root: document.querySelector(styles.movieListContainer),
@@ -13,43 +14,44 @@ const observeOption: IntersectionObserverInit = {
     threshold: 1.0,
 };
 const MoviesList = () => {
-
+    console.log('.')
     const dispatch = useAppDispatch();
     const {movies, loadingStateMovies} = useAppSelector(
         (state) => state.Movies,
     );
     const observerRef = useRef<IntersectionObserver | null>(null);
     const movieListContainerRef = useRef<Element | null>(null);
-    const [position, setPosition] = useState<number>(0)
+
 
     const {movieSearchName, chosenGenresId} =
         useAppSelector((state) => state.Search);
     const {chosenPage} = useAppSelector((state) => state.ChosenPage);
 
-    const {total_pages} = useAppSelector((state) => state.Pagination);
+    const {total_pages, observer_position, scroll_position, page} = useAppSelector((state) => state.Pagination);
 
     useEffect(() => {
         if (loadingStateMovies) return; // Prevents reloading if data is already loading
-        dispatch(chosenPage === 1 ?
-            MoviesActions.searchMovies({
-                searchByTitle: !!movieSearchName, query: movieSearchName ?
-                    `?query=${movieSearchName}&page=${chosenPage}` : `?page=${chosenPage}&with_genres=${chosenGenresId.join()}`,
-            }) : MoviesActions.endlessPaginationAction({
-                searchByTitle: !!
-                    movieSearchName, query: movieSearchName ?
-                    `?query=${movieSearchName}&page=${chosenPage}` : `?page=${chosenPage}&with_genres=${chosenGenresId.join()}`,
-            })
-        )
+        if (chosenPage !== page || page === 1) {
 
+            dispatch(chosenPage === 1 ?
+                MoviesActions.searchMovies({
+                    searchByTitle: !!movieSearchName, query: movieSearchName ?
+                        `?query=${movieSearchName}&page=${chosenPage}` : `?page=${chosenPage}&with_genres=${chosenGenresId.join()}`,
+                }) : MoviesActions.endlessPaginationAction({
+                    searchByTitle: !!
+                        movieSearchName, query: movieSearchName ?
+                        `?query=${movieSearchName}&page=${chosenPage}` : `?page=${chosenPage}&with_genres=${chosenGenresId.join()}`,
+                })
+            )
+        }
     }, [movieSearchName, chosenGenresId, chosenPage]);
 
 
     const handleIntersection = (entries: IntersectionObserverEntry[]) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                // setPosition(Number(entry.target.className.match(/(?<=id_)\d*/)));
-                // observerPositionRef.current = Number(entry.target.className.match(/(?<=id_)\d*/))
-                setPosition(Number(entry.target.className.match(/(?<=id_)\d*/)))
+                dispatch(setObserverPosition(Number(entry.target.className.match(/(?<=id_)\d*/))))
+                dispatch(setScrollPosition(movieListContainerRef.current?.scrollTop))
             }
         });
     }
@@ -64,13 +66,17 @@ const MoviesList = () => {
         const observedElements = Array.from(document.getElementsByClassName('observed'));
         observedElements.forEach(element => observerRef.current?.observe(element));
     }
-
+    console.log("movies", movies.length)
     const scrollHandle = debounce(() => {
         observeElements()
-        if (movieListContainerRef.current)
+        if (movieListContainerRef.current) {
             if (movieListContainerRef.current.scrollTop > movieListContainerRef.current.scrollHeight - 1500 && chosenPage !== total_pages) {
                 dispatch(setChosenPage(chosenPage + 1))
+
             }
+
+
+        }
     }, 100)
     useEffect(() => {
         if (loadingStateMovies) return;
@@ -87,9 +93,24 @@ const MoviesList = () => {
         };
     }, [movies]);
 
+    // useEffect(() => {
+    //     // Save the scroll position before leaving the page
+    //     return () => {
+    //         const base = movieListContainerRef.current
+    //         console.log("unmount", base?.scrollTop)
+    //         dispatch(setScrollPosition(base?.scrollTop));
+    //     };
+    // }, []);
+
+    useEffect(() => {
+        // Restore the scroll position when coming back
+        console.log("mount", scroll_position)
+        movieListContainerRef.current?.scrollTo(0, scroll_position);
+
+    }, []);
     return (
         <div className={styles.moviesListBase}>
-            <ProgressBar observerPosition={position}/>
+            <ProgressBar observerPosition={observer_position}/>
             {/*{loadingStateMovies || loadingStateGenres ? (*/}
             {/*    <div className={styles.spinner}>*/}
             {/*        <ThreeCircles*/}

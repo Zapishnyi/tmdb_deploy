@@ -6,13 +6,15 @@ interface IPaginationSlice {
     total_pages: number;
     total_results: number;
     observer_position: number;
+    scroll_position: number;
 }
 
 const initialState: IPaginationSlice = {
     page: 1,
     total_pages: 1,
     total_results: 0,
-    observer_position: 0
+    observer_position: 0,
+    scroll_position: 0,
 };
 
 export const paginationSlice = createSlice({
@@ -34,8 +36,11 @@ export const paginationSlice = createSlice({
         },
         setObserverPosition: (state, action) => {
             state.observer_position = action.payload;
+        },
+        setScrollPosition: (state, action) => {
+            state.scroll_position = action.payload;
         }
     },
 });
 
-export const {setPage, setPaginationInfo, setObserverPosition} = paginationSlice.actions;
+export const {setPage, setPaginationInfo, setObserverPosition, setScrollPosition} = paginationSlice.actions;
