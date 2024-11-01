@@ -9,7 +9,6 @@ interface IProbes {
 
 const ProgressBar: FC<IProbes> = ({observerPosition}) => {
 
-    // console.log('.', observerPosition)
 
     const {total_pages, total_results} = useAppSelector(state => state.Pagination);
     const {movies} = useAppSelector(state => state.Movies);

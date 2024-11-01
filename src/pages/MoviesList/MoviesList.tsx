@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useAppDispatch, useAppSelector} from "../../redux/store";
 import {MoviesActions} from "../../redux/Slices/moviesSlice";
 import MovieListCard from "../../components/MovieListCard/MovieListCard";
@@ -6,8 +6,6 @@ import styles from "./MoviesList.module.css";
 import {setChosenPage} from "../../redux/Slices/chosenPageSlice";
 import {debounce} from "lodash";
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
-import {setObserverPosition} from "../../redux/Slices/paginationSlice";
-import {current} from "@reduxjs/toolkit";
 
 const observeOption: IntersectionObserverInit = {
     root: document.querySelector(styles.movieListContainer),
