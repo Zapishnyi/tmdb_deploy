@@ -14,7 +14,7 @@ const axiosInstance = axios.create({
 
 interface ITmdbDataApiService {
   getAllGenres: Promise<IGenres>;
-  getAllMovies: (getQuery: string) => Promise<IMoviesPaginated>;
+  getMovies: (getQuery: string) => Promise<IMoviesPaginated>;
   searchMovies: (searchQuery: string) => Promise<IMoviesPaginated>;
 }
 
@@ -22,7 +22,7 @@ export const tmbdDataService: ITmdbDataApiService = {
   getAllGenres: axiosInstance
     .get(tmdbDataURLS.allGenres)
     .then((response) => response.data),
-  getAllMovies: (getQuery) =>
+  getMovies: (getQuery) =>
     axiosInstance
       .get(tmdbDataURLS.allMovies(getQuery))
       .then((value) => value.data),

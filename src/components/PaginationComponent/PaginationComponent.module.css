@@ -49,8 +49,7 @@
     button {
         aspect-ratio: 1/1;
         height: 50px;
-
-        background: transparent;
+       background: transparent;
         border: none;
         display: flex;
         justify-content: center;

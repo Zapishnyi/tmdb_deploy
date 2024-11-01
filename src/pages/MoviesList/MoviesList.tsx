@@ -1,83 +1,138 @@
-import React, { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
-import { MoviesActions } from "../../redux/Slices/moviesSlice";
+import React, {useCallback, useEffect, useRef, useState} from "react";
+import {useAppDispatch, useAppSelector} from "../../redux/store";
+import {MoviesActions} from "../../redux/Slices/moviesSlice";
 import MovieListCard from "../../components/MovieListCard/MovieListCard";
 import styles from "./MoviesList.module.css";
-import PaginationComponent from "../../components/PaginationComponent/PaginationComponent";
-import { ThreeCircles } from "react-loader-spinner";
-import { setChosenPage } from "../../redux/Slices/chosenPageSlice";
+import {setChosenPage} from "../../redux/Slices/chosenPageSlice";
+import {debounce} from "lodash";
+import ProgressBar from "../../components/ProgressBar/ProgressBar";
+import {setObserverPosition} from "../../redux/Slices/paginationSlice";
+import {current} from "@reduxjs/toolkit";
 
-const MoviesList = () => {
-  const dispatch = useAppDispatch();
-  const { movies, loadingStateMovies } = useAppSelector(
-    (state) => state.Movies,
-  );
-
-  const { movieSearchName, chosenGenresId, loadingStateGenres } =
-    useAppSelector((state) => state.Search);
-  const { chosenPage } = useAppSelector((state) => state.ChosenPage);
-  const { total_pages } = useAppSelector((state) => state.Pagination);
-
-  const paginationAction = (pageChanged: number) => {
-    dispatch(setChosenPage(pageChanged));
-  };
-
-  useEffect(() => {
-    dispatch(
-      movieSearchName
-        ? MoviesActions.searchMoviesByTitle(
-            `?query=${movieSearchName}&page=${chosenPage}`,
-          )
-        : MoviesActions.searchMoviesByGenresOnly(
-            `?page=${chosenPage}&with_genres=${chosenGenresId.join()}`,
-          ),
-    );
-  }, [movieSearchName, chosenPage, chosenGenresId]);
-
-  return (
-    <div className={styles.moviesListBase}>
-      {loadingStateMovies || loadingStateGenres ? (
-        <div className={styles.spinner}>
-          <ThreeCircles
-            height="80"
-            width="80"
-            color="#9d9deb"
-            ariaLabel="loading"
-          />
-        </div>
-      ) : (
-        <div className={styles.movieListContainer}>
-          {movies.length ? (
-            chosenPage <= 500 ? (
-              movies.map((movie) => (
-                <MovieListCard key={movie.id} movie={movie} />
-              ))
-            ) : (
-              <div className={styles.movieNotFoundWarning}>
-                <h3>
-                  Database limits showed pages by 500, you should make your
-                  request more specific.
-                </h3>
-              </div>
-            )
-          ) : (
-            <div className={styles.movieNotFoundWarning}>
-              <h3>
-                Your search request doesn't match any movie in TMDB on this
-                page.
-              </h3>
-            </div>
-          )}
-        </div>
-      )}
-
-      <PaginationComponent
-        page={chosenPage}
-        totalPages={total_pages}
-        paginationAction={paginationAction}
-      />
-    </div>
-  );
+const observeOption: IntersectionObserverInit = {
+    root: document.querySelector(styles.movieListContainer),
+    rootMargin: "0px",
+    threshold: 1.0,
 };
+const MoviesList = () => {
+
+    const dispatch = useAppDispatch();
+    const {movies, loadingStateMovies} = useAppSelector(
+        (state) => state.Movies,
+    );
+    const observerRef = useRef<IntersectionObserver | null>(null);
+    const movieListContainerRef = useRef<Element | null>(null);
+    const observerPositionRef = useRef<number>(0)
+    const [position, setPosition] = useState<number>(0)
+
+    const {movieSearchName, chosenGenresId, loadingStateGenres} =
+        useAppSelector((state) => state.Search);
+    const {chosenPage} = useAppSelector((state) => state.ChosenPage);
+
+    const {total_pages, page, total_results, observer_position} = useAppSelector((state) => state.Pagination);
+
+    useEffect(() => {
+        if (loadingStateMovies) return; // Prevents reloading if data is already loading
+        dispatch(chosenPage === 1 ?
+            MoviesActions.searchMovies({
+                searchByTitle: !!movieSearchName, query: movieSearchName ?
+                    `?query=${movieSearchName}&page=${chosenPage}` : `?page=${chosenPage}&with_genres=${chosenGenresId.join()}`,
+            }) : MoviesActions.endlessPaginationAction({
+                searchByTitle: !!
+                    movieSearchName, query: movieSearchName ?
+                    `?query=${movieSearchName}&page=${chosenPage}` : `?page=${chosenPage}&with_genres=${chosenGenresId.join()}`,
+            })
+        )
+
+    }, [movieSearchName, chosenGenresId, chosenPage]);
+
+
+    const handleIntersection = (entries: IntersectionObserverEntry[]) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // setPosition(Number(entry.target.className.match(/(?<=id_)\d*/)));
+                // observerPositionRef.current = Number(entry.target.className.match(/(?<=id_)\d*/))
+                setPosition(Number(entry.target.className.match(/(?<=id_)\d*/)))
+            }
+        });
+    }
+
+    useEffect(() => {
+        // Create the IntersectionObserver instance only once
+        observerRef.current = new IntersectionObserver(handleIntersection, observeOption);
+        return () => observerRef.current?.disconnect();
+    }, [handleIntersection]);
+
+    const observeElements = () => {
+        const observedElements = Array.from(document.getElementsByClassName('observed'));
+        observedElements.forEach(element => observerRef.current?.observe(element));
+    }
+
+    const scrollHandle = debounce(() => {
+        observeElements()
+        if (movieListContainerRef.current)
+            if (movieListContainerRef.current.scrollTop > movieListContainerRef.current.scrollHeight - 1500 && chosenPage !== total_pages) {
+                dispatch(setChosenPage(chosenPage + 1))
+            }
+    }, 100)
+    useEffect(() => {
+        if (loadingStateMovies) return;
+        movieListContainerRef.current = document.getElementsByClassName(styles.movieListContainer)[0]
+
+
+        observeElements()
+        // const observedElements = document.querySelectorAll('.observed')
+
+        movieListContainerRef.current.addEventListener('scroll', scrollHandle)
+        return () => {
+            movieListContainerRef.current?.removeEventListener('scroll', scrollHandle)
+            observerRef.current?.disconnect();
+        };
+    }, [movies]);
+
+    return (
+        <div className={styles.moviesListBase}>
+            <ProgressBar observerPosition={position}/>
+            {/*{loadingStateMovies || loadingStateGenres ? (*/}
+            {/*    <div className={styles.spinner}>*/}
+            {/*        <ThreeCircles*/}
+            {/*            height="80"*/}
+            {/*            width="80"*/}
+            {/*            color="#9d9deb"*/}
+            {/*            ariaLabel="loading"*/}
+            {/*        />*/}
+            {/*    </div>*/}
+            {/*) : (*/}
+            <div className={styles.movieListContainer}>
+                {/*movies.length ? (*/
+                    // chosenPage <= 500 ? (
+                    movies.map((movie, index) => (
+                        <MovieListCard key={index} movie={movie}/>
+                    ))
+                    // )
+                    // ) : (
+                    //     <div className={styles.movieNotFoundWarning}>
+                    //         <h3>
+                    //             Database limits showed pages by 500, you should make your
+                    //             request more specific.
+                    //         </h3>
+                    //     </div>
+                    // )
+                    // ) : (
+                    //     <div className={styles.movieNotFoundWarning}>
+                    //         <h3>
+                    //             Your search request doesn't match any movie in TMDB on this
+                    //             page.
+                    //         </h3>
+                    //     </div>
+                    // )}
+                }
+            </div>
+            {/*)}*/}
+
+
+        </div>
+    );
+}
 
 export default MoviesList;
