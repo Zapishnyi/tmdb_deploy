@@ -20,14 +20,13 @@ const MoviesList = () => {
     );
     const observerRef = useRef<IntersectionObserver | null>(null);
     const movieListContainerRef = useRef<Element | null>(null);
-    const observerPositionRef = useRef<number>(0)
     const [position, setPosition] = useState<number>(0)
 
-    const {movieSearchName, chosenGenresId, loadingStateGenres} =
+    const {movieSearchName, chosenGenresId} =
         useAppSelector((state) => state.Search);
     const {chosenPage} = useAppSelector((state) => state.ChosenPage);
 
-    const {total_pages, page, total_results, observer_position} = useAppSelector((state) => state.Pagination);
+    const {total_pages} = useAppSelector((state) => state.Pagination);
 
     useEffect(() => {
         if (loadingStateMovies) return; // Prevents reloading if data is already loading
