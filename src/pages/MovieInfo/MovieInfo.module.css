@@ -6,14 +6,10 @@
     background: var(--background_color_lighter);
 
     .backButton {
-        position: absolute;
-        top: 35px;
-        right: 7vw;
-        z-index: 25;
-
-        @media (width < 800px) {
-            top: 0;
-        }
+        width: 100%;
+        /*@media (width < 800px) {*/
+        /*    top: 0;*/
+        /*}*/
     }
 
 
@@ -89,8 +85,7 @@
             .overview {
                 padding: 0 20px 20px 20px;
                 text-align: justify;
-                margin-bottom: 40px;
-
+                
             }
 
 
@@ -100,4 +95,5 @@
 
 }
 
-@media screen {}
+@media screen {
+}

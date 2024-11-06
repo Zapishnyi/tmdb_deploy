@@ -1,19 +1,14 @@
 import IMovie from "../../models/IMovie";
-import {
-    createAsyncThunk,
-    createSlice,
-    isPending,
-    isRejected,
-} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, isPending, isRejected,} from "@reduxjs/toolkit";
 import {tmbdDataService} from "../../services/tmdbData.api.service";
 import {AxiosError} from "axios";
-import {setPaginationInfo} from "./paginationSlice";
-import {store} from "../store";
 import IErrorResponse from "../../models/IErrorResponse";
 import IMoviesPaginated from "../../models/IMoviesPaginated";
+import {setPaginationDownloaded} from "./paginationSlice";
 
 interface IMoviesSlice {
-    movies: IMovie[];
+    moviesDownloaded: IMovie[];
+    moviesFiltered: IMovie[];
     chosenMovie: IMovie | null;
     loadingStateMovies: boolean;
 }
@@ -24,35 +19,56 @@ interface ISearchQuery {
 }
 
 const initialState: IMoviesSlice = {
-    movies: [],
+    moviesDownloaded: [],
+    moviesFiltered: [],
     chosenMovie: null,
     loadingStateMovies: false,
 };
 
-const moviesFiltering = (movies: IMoviesPaginated): IMoviesPaginated => {
-    const {
-        Search: {chosenGenresId},
-    } = store.getState();
-    Object.assign(movies, {
-        results: movies.results?.filter((e: IMovie) =>
-            chosenGenresId.reduce(
-                (acc, curr) => (!acc ? acc : e.genre_ids.includes(curr)),
-                true,
-            ),
-        ),
-    });
-    return movies;
+
+const moviesDownload = async ({
+                                  query,
+                                  searchByTitle
+                              }: ISearchQuery, movies: IMoviesPaginated): Promise<IMoviesPaginated> => {
+
+    const moviesRecursion = async (query: string, searchByTitle: boolean, movies: IMoviesPaginated): Promise<IMoviesPaginated> => {
+        const tempMovies = await tmbdDataService.searchMovies(query)
+
+        movies = {...tempMovies, results: [...movies.results || [], ...tempMovies.results || []]};
+        if (tempMovies.total_pages !== tempMovies.page && tempMovies.page <= 24) {
+            console.log("movie downloads", tempMovies.page, tempMovies.results, tempMovies.total_pages)
+            movies = await moviesRecursion(
+                query.replace(/(?<=page=)\d*/, (++tempMovies.page).toString()),
+                searchByTitle,
+                {...movies})
+
+        }
+        return movies
+    }
+    const moviesFound = await moviesRecursion(query, searchByTitle, movies);
+    if (moviesFound.page === 25) {
+        moviesFound.total_pages = 25;
+        moviesFound.total_results = 500;
+    }
+    console.log("movies Found", moviesFound)
+    return moviesFound;
 }
 
 const searchMovies = createAsyncThunk(
     "movies/searchMovies",
     async (searchQuery: ISearchQuery, thunkAPI) => {
         try {
-            let movies: IMoviesPaginated
-            searchQuery.searchByTitle
-                ? movies = moviesFiltering(await tmbdDataService.searchMovies(searchQuery.query))
-                : movies = await tmbdDataService.getMovies(searchQuery.query);
-            thunkAPI.dispatch(setPaginationInfo(movies));
+            let movies: IMoviesPaginated = {page: 1, total_pages: 1, total_results: 0};
+            if (searchQuery.searchByTitle) {
+                console.log("search by title")
+                movies = await moviesDownload(searchQuery, movies);
+
+            } else {
+                console.log("search not by title")
+                movies = await tmbdDataService.getMovies(searchQuery.query)
+            }
+            console.log('fouind movies', movies)
+            thunkAPI.dispatch(setPaginationDownloaded(movies));
             return thunkAPI.fulfillWithValue(movies.results);
         } catch (e) {
             const error = e as AxiosError<IErrorResponse>;
@@ -67,11 +83,11 @@ const endlessPaginationAction = createAsyncThunk(
     "movies/endlessPagination",
     async (searchQuery: ISearchQuery, thunkAPI) => {
         try {
-            let movies: IMoviesPaginated
-            searchQuery.searchByTitle
-                ? movies = moviesFiltering(await tmbdDataService.searchMovies(searchQuery.query))
-                : movies = await tmbdDataService.getMovies(searchQuery.query);
-            thunkAPI.dispatch(setPaginationInfo(movies));
+
+
+            const movies = await tmbdDataService.getMovies(searchQuery.query);
+
+            thunkAPI.dispatch(setPaginationDownloaded(movies));
             return thunkAPI.fulfillWithValue(movies.results);
         } catch (e) {
             const error = e as AxiosError<IErrorResponse>;
@@ -93,14 +109,18 @@ export const moviesSlice = createSlice({
         setLoadingState: (state, action) => {
             state.loadingStateMovies = action.payload;
         },
+        setMoviesFiltered: (state, action) => {
+            state.moviesFiltered = action.payload;
+        }
     },
     extraReducers: (builder) => {
         builder
             .addCase(searchMovies.fulfilled, (state, action) => {
-                state.movies = action.payload || [];
+                state.moviesDownloaded = action.payload || [];
+
             })
             .addCase(endlessPaginationAction.fulfilled, (state, action) => {
-                state.movies = [...state.movies, ...action.payload || []];
+                state.moviesDownloaded = [...state.moviesDownloaded, ...action.payload || []];
             })
             .addMatcher(
                 isRejected(searchMovies, endlessPaginationAction),

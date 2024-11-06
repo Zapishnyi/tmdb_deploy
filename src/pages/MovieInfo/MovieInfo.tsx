@@ -9,14 +9,16 @@ import GenresBadgeSet from "../../components/GenresBadgeSet/GenresBadgeSet";
 import BackButton from "../../components/BackButton/BackButton";
 import PaginationComponent from "../../components/PaginationComponent/PaginationComponent";
 import {MoviesActions} from "../../redux/Slices/moviesSlice";
+import {setScrollPosition} from "../../redux/Slices/paginationSlice";
 
 const MovieInfo: FC = () => {
     const navigate = useNavigate();
 
-    const {movies, chosenMovie} = useAppSelector((state) => state.Movies);
+    const {chosenMovie} = useAppSelector((state) => state.Movies);
+    const {scroll_position} = useAppSelector((state) => state.Pagination);
 
     const dispatch = useAppDispatch();
-
+    // dispatch(setScrollPosition(chosenMovie?.id || scroll_position))
     const getLanguage = (code: string) =>
         new Intl.DisplayNames(["en"], {type: "language"}).of(code);
 
@@ -26,18 +28,8 @@ const MovieInfo: FC = () => {
         }
     }, []);
 
-    const page = movies.findIndex((e) => e.id === chosenMovie?.id) + 1;
-    const totalPages = movies.length;
-
-    const paginationAction = (pageChanged: number) => {
-        dispatch(MoviesActions.setChosenMovie(movies[pageChanged - 1]));
-    };
-
     return (
         <div className={styles.base}>
-            <div className={styles.backButton} onClick={() => navigate("/movies")}>
-                <BackButton/>
-            </div>
             {chosenMovie && (
                 <div className={styles.scrollContainer}>
                     <div className={styles.container}>
@@ -75,8 +67,13 @@ const MovieInfo: FC = () => {
                         </div>
                         <p className={styles.overview}>{chosenMovie.overview}</p>
                     </div>
+                    <div className={styles.backButton} onClick={() => navigate("/movies")}>
+                        <BackButton/>
+                    </div>
                 </div>
+
             )}
+
             {/*<PaginationComponent*/}
             {/*  page={page}*/}
             {/*  totalPages={totalPages}*/}

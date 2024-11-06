@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {FC, useEffect, useRef} from "react";
 import {useAppDispatch, useAppSelector} from "../../redux/store";
 import {MoviesActions} from "../../redux/Slices/moviesSlice";
 import MovieListCard from "../../components/MovieListCard/MovieListCard";
@@ -6,46 +6,41 @@ import styles from "./MoviesList.module.css";
 import {setChosenPage} from "../../redux/Slices/chosenPageSlice";
 import {debounce} from "lodash";
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
-import {setObserverPosition, setScrollPosition} from "../../redux/Slices/paginationSlice";
+import {setObserverPosition, setPaginationFiltered, setScrollPosition} from "../../redux/Slices/paginationSlice";
+import {ThreeCircles} from "react-loader-spinner";
+import {moviesFiltering} from "../../helpers/MovieFilter";
 
-const observeOption: IntersectionObserverInit = {
-    root: document.querySelector(styles.movieListContainer),
-    rootMargin: "0px",
-    threshold: 1.0,
-};
-const MoviesList = () => {
-    console.log('.')
+
+const MoviesList: FC = () => {
+
     const dispatch = useAppDispatch();
-    const {movies, loadingStateMovies} = useAppSelector(
-        (state) => state.Movies,
-    );
+
+    const {moviesDownloaded, moviesFiltered, loadingStateMovies} = useAppSelector((state) => state.Movies);
+    const {movieSearchName, chosenGenresId, loadingStateGenres} = useAppSelector((state) => state.Search);
+    const {chosenPage} = useAppSelector((state) => state.ChosenPage);
+    const {
+        paginationDownloaded,
+        paginationFiltered,
+        observer_position,
+        scroll_position,
+    } = useAppSelector((state) => state.Pagination);
+    console.log('.', observer_position, "paginationFiltered:", paginationFiltered, "paginationDownloaded:", paginationDownloaded)
+
     const observerRef = useRef<IntersectionObserver | null>(null);
     const movieListContainerRef = useRef<Element | null>(null);
-
-
-    const {movieSearchName, chosenGenresId} =
-        useAppSelector((state) => state.Search);
-    const {chosenPage} = useAppSelector((state) => state.ChosenPage);
-
-    const {total_pages, observer_position, scroll_position, page} = useAppSelector((state) => state.Pagination);
-
-    useEffect(() => {
-        if (loadingStateMovies) return; // Prevents reloading if data is already loading
-        if (chosenPage !== page || page === 1) {
-
-            dispatch(chosenPage === 1 ?
-                MoviesActions.searchMovies({
-                    searchByTitle: !!movieSearchName, query: movieSearchName ?
-                        `?query=${movieSearchName}&page=${chosenPage}` : `?page=${chosenPage}&with_genres=${chosenGenresId.join()}`,
-                }) : MoviesActions.endlessPaginationAction({
-                    searchByTitle: !!
-                        movieSearchName, query: movieSearchName ?
-                        `?query=${movieSearchName}&page=${chosenPage}` : `?page=${chosenPage}&with_genres=${chosenGenresId.join()}`,
-                })
-            )
+    const movieSearchNameRef = useRef<string>('');
+    const chosenGenresIdRef = useRef<number[]>([]);
+    const chosenPageRef = useRef<number>(1);
+    const pageChangeInit = () => {
+        if (movieListContainerRef.current && movieListContainerRef.current.scrollTop > movieListContainerRef.current.scrollHeight - 1500 && chosenPage !== paginationFiltered.total_pages) {
+            dispatch(setChosenPage(chosenPage + 1))
         }
-    }, [movieSearchName, chosenGenresId, chosenPage]);
+    }
 
+    const observeElements = () => {
+        const observedElements = Array.from(document.getElementsByClassName('observed'));
+        observedElements.forEach(element => observerRef.current?.observe(element));
+    }
 
     const handleIntersection = (entries: IntersectionObserverEntry[]) => {
         entries.forEach(entry => {
@@ -56,97 +51,169 @@ const MoviesList = () => {
         });
     }
 
-    useEffect(() => {
-        // Create the IntersectionObserver instance only once
-        observerRef.current = new IntersectionObserver(handleIntersection, observeOption);
-        return () => observerRef.current?.disconnect();
-    }, [handleIntersection]);
-
-    const observeElements = () => {
-        const observedElements = Array.from(document.getElementsByClassName('observed'));
-        observedElements.forEach(element => observerRef.current?.observe(element));
-    }
-    console.log("movies", movies.length)
     const scrollHandle = debounce(() => {
         observeElements()
-        if (movieListContainerRef.current) {
-            if (movieListContainerRef.current.scrollTop > movieListContainerRef.current.scrollHeight - 1500 && chosenPage !== total_pages) {
-                dispatch(setChosenPage(chosenPage + 1))
-
-            }
-
-
-        }
+        pageChangeInit()
     }, 100)
+
     useEffect(() => {
+        console.log("use Effect 3 fired")
         if (loadingStateMovies) return;
         movieListContainerRef.current = document.getElementsByClassName(styles.movieListContainer)[0]
-
-
-        observeElements()
-        // const observedElements = document.querySelectorAll('.observed')
-
-        movieListContainerRef.current.addEventListener('scroll', scrollHandle)
+        // observeElements()
+        movieListContainerRef.current?.addEventListener('scroll', scrollHandle)
         return () => {
             movieListContainerRef.current?.removeEventListener('scroll', scrollHandle)
             observerRef.current?.disconnect();
         };
-    }, [movies]);
 
-    // useEffect(() => {
-    //     // Save the scroll position before leaving the page
-    //     return () => {
-    //         const base = movieListContainerRef.current
-    //         console.log("unmount", base?.scrollTop)
-    //         dispatch(setScrollPosition(base?.scrollTop));
-    //     };
-    // }, []);
+    }, [moviesFiltered]);
 
     useEffect(() => {
-        // Restore the scroll position when coming back
-        console.log("mount", scroll_position)
-        movieListContainerRef.current?.scrollTo(0, scroll_position);
+        movieSearchNameRef.current = movieSearchName;
+        chosenGenresIdRef.current = chosenGenresId;
+        chosenPageRef.current = chosenPage;
+        console.log("use Effect -1 fired")
+        const observeOption: IntersectionObserverInit = {
+            root: document.getElementsByClassName(styles.moviesListBase)[0] as HTMLDivElement,
+            rootMargin: '0px',
+            threshold: 0.5,
+        };
 
+        // Create the IntersectionObserver instance only once
+        observerRef.current = new IntersectionObserver(handleIntersection, observeOption);
+        pageChangeInit()
+
+        // scroll to previous position upon return to the page
+        movieListContainerRef.current?.scrollTo(0, scroll_position);
+        console.log("scroll_position:", scroll_position, movieListContainerRef.current)
+        return () => observerRef.current?.disconnect();
     }, []);
+
+    console.log("scroll_position:", scroll_position,)
+    useEffect(() => {
+        console.log("use Effect 1 fired")
+        if (loadingStateMovies) return; // Prevents reloading if data is already loading
+
+        switch (true) {
+            case !moviesFiltered.length && !moviesDownloaded.length && !movieSearchName : {
+                console.log("1", chosenPage)
+
+                dispatch(
+                    MoviesActions.searchMovies({
+                        searchByTitle: !!
+                            movieSearchName, query: `?page=${chosenPage}&with_genres=${chosenGenresId.join()}`,
+                    })
+                )
+            }
+                break;
+            case  movieSearchNameRef.current !== movieSearchName : {
+                console.log("2")
+                dispatch(MoviesActions.searchMovies({
+                    searchByTitle: !!movieSearchName, query: `?query=${movieSearchName}&page=${chosenPage}`
+                }))
+            }
+                break;
+            case  JSON.stringify(chosenGenresIdRef.current) !== JSON.stringify(chosenGenresId) : {
+                console.log(" chosenGenresIdRef.current:", chosenGenresIdRef.current,)
+                console.log(" chosenGenresId:", chosenGenresId,)
+                if (!!movieSearchName) {
+                    console.log("3")
+                    console.log("filtered", moviesDownloaded)
+                    const filtered = moviesFiltering(moviesDownloaded);
+
+                    dispatch(MoviesActions.setMoviesFiltered(filtered.results));
+                    dispatch(setPaginationFiltered(filtered));
+
+                } else {
+                    console.log("4")
+                    dispatch(
+                        MoviesActions.searchMovies({
+                            searchByTitle: !!movieSearchName,
+                            query: `?page=${chosenPage}&with_genres=${chosenGenresId.join()}`,
+                        })
+                    )
+                }
+            }
+                break;
+            case chosenPageRef.current !== chosenPage : {
+
+                console.log("5", chosenPageRef.current, chosenPage)
+                if (!(!!movieSearchName)) {
+                    dispatch(
+                        MoviesActions.endlessPaginationAction({
+                            searchByTitle: !!
+                                movieSearchName, query: `?page=${chosenPage}&with_genres=${chosenGenresId.join()}`,
+                        })
+                    )
+                }
+                break;
+            }
+        }
+
+        movieSearchNameRef.current = movieSearchName;
+        chosenGenresIdRef.current = chosenGenresId;
+        chosenPageRef.current = chosenPage;
+    }, [movieSearchName, chosenGenresId, chosenPage]);
+
+    useEffect(() => {
+        console.log("use Effect 2 fired")
+        if (loadingStateMovies) return;
+        if (!!movieSearchName) {
+            console.log("1")
+            const moviesFilter = moviesFiltering(moviesDownloaded)
+            console.log("movies filtered before update", {...moviesFilter})
+            dispatch(MoviesActions.setMoviesFiltered(moviesFilter.results))
+            dispatch(setPaginationFiltered(moviesFilter))
+            console.log('movies Filtered after update', {...moviesFiltered})
+        } else {
+            console.log("2")
+            dispatch(MoviesActions.setMoviesFiltered(moviesDownloaded))
+            dispatch(setPaginationFiltered(paginationDownloaded))
+        }
+
+    }, [moviesDownloaded]);
+
+
+    console.log("moviesFiltered", moviesFiltered.length)
+
     return (
         <div className={styles.moviesListBase}>
-            <ProgressBar observerPosition={observer_position}/>
-            {/*{loadingStateMovies || loadingStateGenres ? (*/}
-            {/*    <div className={styles.spinner}>*/}
-            {/*        <ThreeCircles*/}
-            {/*            height="80"*/}
-            {/*            width="80"*/}
-            {/*            color="#9d9deb"*/}
-            {/*            ariaLabel="loading"*/}
-            {/*        />*/}
-            {/*    </div>*/}
-            {/*) : (*/}
-            <div className={styles.movieListContainer}>
-                {/*movies.length ? (*/
-                    // chosenPage <= 500 ? (
-                    movies.map((movie, index) => (
-                        <MovieListCard key={index} movie={movie}/>
-                    ))
-                    // )
-                    // ) : (
-                    //     <div className={styles.movieNotFoundWarning}>
-                    //         <h3>
-                    //             Database limits showed pages by 500, you should make your
-                    //             request more specific.
-                    //         </h3>
-                    //     </div>
-                    // )
-                    // ) : (
-                    //     <div className={styles.movieNotFoundWarning}>
-                    //         <h3>
-                    //             Your search request doesn't match any movie in TMDB on this
-                    //             page.
-                    //         </h3>
-                    //     </div>
-                    // )}
-                }
-            </div>
-            {/*)}*/}
+            {paginationFiltered.total_results > 1 && <ProgressBar observerPosition={observer_position}/>}
+            {loadingStateMovies || loadingStateGenres ? (
+                <div className={styles.spinner}>
+                    <ThreeCircles
+                        height="80"
+                        width="80"
+                        color="#9d9deb"
+                        ariaLabel="loading"
+                    />
+                </div>
+            ) : (
+                <div className={styles.movieListContainer}>
+                    {moviesFiltered.length ? (
+                        // chosenPage <= 500 ? (
+                        moviesFiltered.map((movie, index) => (
+                            <MovieListCard key={index} movie={movie}/>
+                        ))
+                        // )
+                        // ) : (
+                        //     <div className={styles.movieNotFoundWarning}>
+                        //         <h3>
+                        //             Database limits showed pages by 500, you should make your
+                        //             request more specific.
+                        //         </h3>
+                        //     </div>
+                        // )
+                    ) : (
+                        <div className={styles.movieNotFoundWarning}>
+                            <h3>
+                                Your search request doesn't match any movie in TMDB.
+                            </h3>
+                        </div>
+                    )}
+                </div>
+            )}
 
 
         </div>
