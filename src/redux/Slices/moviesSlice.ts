@@ -35,7 +35,7 @@ const moviesDownload = async ({
         const tempMovies = await tmbdDataService.searchMovies(query)
 
         movies = {...tempMovies, results: [...movies.results || [], ...tempMovies.results || []]};
-        if (tempMovies.total_pages !== tempMovies.page && tempMovies.page <= 24) {
+        if (tempMovies.total_pages !== tempMovies.page && tempMovies.page <= 39) {
             console.log("movie downloads", tempMovies.page, tempMovies.results, tempMovies.total_pages)
             movies = await moviesRecursion(
                 query.replace(/(?<=page=)\d*/, (++tempMovies.page).toString()),
@@ -46,9 +46,9 @@ const moviesDownload = async ({
         return movies
     }
     const moviesFound = await moviesRecursion(query, searchByTitle, movies);
-    if (moviesFound.page === 25) {
-        moviesFound.total_pages = 25;
-        moviesFound.total_results = 500;
+    if (moviesFound.page === 40) {
+        moviesFound.total_pages = 40;
+        moviesFound.total_results = 800;
     }
     console.log("movies Found", moviesFound)
     return moviesFound;
