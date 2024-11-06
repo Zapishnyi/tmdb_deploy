@@ -7,17 +7,12 @@ import StarRatings from "react-star-ratings";
 import {errorImage} from "../../constants/errorImagePath";
 import GenresBadgeSet from "../../components/GenresBadgeSet/GenresBadgeSet";
 import BackButton from "../../components/BackButton/BackButton";
-import PaginationComponent from "../../components/PaginationComponent/PaginationComponent";
-import {MoviesActions} from "../../redux/Slices/moviesSlice";
-import {setScrollPosition} from "../../redux/Slices/paginationSlice";
 
 const MovieInfo: FC = () => {
     const navigate = useNavigate();
 
     const {chosenMovie} = useAppSelector((state) => state.Movies);
-    const {scroll_position} = useAppSelector((state) => state.Pagination);
 
-    const dispatch = useAppDispatch();
     // dispatch(setScrollPosition(chosenMovie?.id || scroll_position))
     const getLanguage = (code: string) =>
         new Intl.DisplayNames(["en"], {type: "language"}).of(code);
