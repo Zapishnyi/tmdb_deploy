@@ -1,6 +1,6 @@
 import React, {FC, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
-import {useAppDispatch, useAppSelector} from "../../redux/store";
+import {useAppSelector} from "../../redux/store";
 import styles from "./MovieInfo.module.css";
 import MovieImagePreview from "../../components/MovieImagePreview/MovieImagePreview";
 import StarRatings from "react-star-ratings";
