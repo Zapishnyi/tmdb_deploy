@@ -1,20 +1,26 @@
-import React, { FC } from "react";
+import React, {FC} from "react";
 import styles from "./SearchMenuButtonMobile.module.css";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import MagnifyingGlassBtn from "../MagnifyingGlassBtn/MagnifyingGlassBtn";
 
-const SearchMenuButtonMobile: FC = () => {
-  const navigate = useNavigate();
-  return (
-    <div
-      onClick={() => {
-        navigate("/search");
-      }}
-      className={styles.burgerMenu}
-    >
-      <MagnifyingGlassBtn />
-    </div>
-  );
+interface IProps {
+    style: string;
+}
+
+const SearchMenuButtonMobile: FC<IProps> = ({style}) => {
+    const navigate = useNavigate();
+    const clickHandle = () => {
+        const searchPanel = document.getElementsByClassName(`${style}`)[0] as HTMLDivElement;
+        searchPanel.classList.toggle('visible')
+    }
+    return (
+        <div
+            onClick={clickHandle}
+            className={styles.burgerMenu}
+        >
+            <MagnifyingGlassBtn/>
+        </div>
+    );
 };
 
 export default SearchMenuButtonMobile;

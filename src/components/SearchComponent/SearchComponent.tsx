@@ -1,17 +1,14 @@
-import React, {FC, useEffect} from "react";
-import {useAppDispatch} from "../../redux/store";
+import React, {FC} from "react";
 
 import SearchForm from "../../forms/SearchForm/SearchForm";
-import {SearchActions} from "../../redux/Slices/searchSlice";
 
-const SearchComponent: FC = () => {
-    const dispatch = useAppDispatch();
+interface IProps {
+    style: string;
+}
 
-    useEffect(() => {
-        dispatch(SearchActions.loadGenres());
-    }, []);
+const SearchComponent: FC<IProps> = ({style}) => {
 
-    return <SearchForm/>;
+    return <SearchForm style={style}/>;
 };
 
 export default SearchComponent;

@@ -1,0 +1,5 @@
+#header .visible {
+    display: flex;
+    opacity: 1;
+    transition: 0.5s ease-in-out;
+}
