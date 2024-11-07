@@ -2,7 +2,6 @@ import {createHashRouter, Navigate} from "react-router-dom";
 import MainLayout from "../layouts/MainLayout/MainLayout";
 import MoviesList from "../pages/MoviesList/MoviesList";
 import MovieInfo from "../pages/MovieInfo/MovieInfo";
-import SearchPageMobile from "../pages/SearchPageMobile/SearchPageMobile";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
 
 export const routerConfig = createHashRouter([

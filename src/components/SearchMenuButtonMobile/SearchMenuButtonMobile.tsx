@@ -1,6 +1,5 @@
 import React, {FC} from "react";
 import styles from "./SearchMenuButtonMobile.module.css";
-import {useNavigate} from "react-router-dom";
 import MagnifyingGlassBtn from "../MagnifyingGlassBtn/MagnifyingGlassBtn";
 
 interface IProps {
@@ -8,7 +7,7 @@ interface IProps {
 }
 
 const SearchMenuButtonMobile: FC<IProps> = ({style}) => {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const clickHandle = () => {
         const searchPanel = document.getElementsByClassName(`${style}`)[0] as HTMLDivElement;
         searchPanel.classList.toggle('visible')

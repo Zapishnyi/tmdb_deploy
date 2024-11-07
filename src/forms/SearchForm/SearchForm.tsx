@@ -4,7 +4,6 @@ import {useAppDispatch, useAppSelector} from "../../redux/store";
 import styles from "./SearchForm.module.css";
 import {SearchActions} from "../../redux/Slices/searchSlice";
 import {useLocation, useNavigate} from "react-router-dom";
-import GenresBadgeSet from "../../components/GenresBadgeSet/GenresBadgeSet";
 import MagnifyingGlassBtn from "../../components/MagnifyingGlassBtn/MagnifyingGlassBtn";
 import {setChosenPage} from "../../redux/Slices/chosenPageSlice";
 

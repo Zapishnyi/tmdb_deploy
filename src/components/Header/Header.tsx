@@ -4,14 +4,13 @@ import SearchComponent from "../SearchComponent/SearchComponent";
 import UserInfo from "../UserInfo/UserInfo";
 import ColorThemeToggle from "../ColorThemeToggle/ColorThemeToggle";
 import SearchMenuButtonMobile from "../SearchMenuButtonMobile/SearchMenuButtonMobile";
-import GenresBadgeSet from "../GenresBadgeSet/GenresBadgeSet";
 import styles from "./Header.module.css";
 import {Link} from "react-router-dom";
 import {SearchActions} from "../../redux/Slices/searchSlice";
 import './Header.css'
 
 const Header: FC = () => {
-    const {chosenGenresId} = useAppSelector((state) => state.Search);
+    // const {chosenGenresId} = useAppSelector((state) => state.Search);
     const dispatch = useAppDispatch();
 
     useEffect(() => {

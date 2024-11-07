@@ -1,5 +1,4 @@
 import React, {useEffect} from "react";
-import SearchComponent from "../../components/SearchComponent/SearchComponent";
 import styles from "./SearPageMobile.module.css";
 import {useNavigate} from "react-router-dom";
 
