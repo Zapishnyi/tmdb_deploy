@@ -1,13 +1,13 @@
-import IMovie from "../models/IMovie";
-import IMoviesPaginated from "../models/IMoviesPaginated";
 import {store} from "../redux/store";
+import ITVShow from "../models/ITVShow";
+import ITVShowsPaginated from "../models/ITVShowsPaginated";
 
-export const moviesFiltering = (movies: IMovie[]): IMoviesPaginated => {
-    const {Search: {chosenGenresMoviesId}} = store.getState();
+export const TVShowFiltering = (tvShows: ITVShow[]): ITVShowsPaginated => {
+    const {Search: {chosenGenresTVShowsId}} = store.getState();
 
-    const results = movies.filter((e: IMovie) =>
+    const results = tvShows.filter((e: ITVShow) =>
 
-        chosenGenresMoviesId.reduce(
+        chosenGenresTVShowsId.reduce(
             (acc: boolean, curr: number): boolean => {
 
                 return (!acc ? acc : e.genre_ids?.includes(curr))

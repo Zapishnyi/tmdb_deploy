@@ -1,5 +1,6 @@
 import IMoviesPaginated from "../../models/IMoviesPaginated";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import ITVShowsPaginated from "../../models/ITVShowsPaginated";
 
 interface IPaginationSlice {
     paginationDownloaded: {
@@ -31,15 +32,15 @@ const initialState: IPaginationSlice = {
     scroll_position: 0,
 };
 
-export const paginationSlice = createSlice({
-    name: "pagination",
+export const paginationTVShowSlice = createSlice({
+    name: "pagination_tv_show",
     initialState,
     reducers: {
         setPaginationDownloaded: (
             state,
             {
                 payload: {page, total_pages, total_results},
-            }: PayloadAction<IMoviesPaginated>,
+            }: PayloadAction<ITVShowsPaginated>,
         ) => {
             state.paginationDownloaded.page = state.paginationDownloaded.page > total_pages ? 1 : page;
             state.paginationDownloaded.total_results = total_results;
@@ -49,7 +50,7 @@ export const paginationSlice = createSlice({
             state,
             {
                 payload: {page, total_pages, total_results},
-            }: PayloadAction<IMoviesPaginated>,
+            }: PayloadAction<ITVShowsPaginated>,
         ) => {
             state.paginationFiltered.page = state.paginationFiltered.page > total_pages ? 1 : page;
             state.paginationFiltered.total_results = total_results;
@@ -67,10 +68,4 @@ export const paginationSlice = createSlice({
     },
 });
 
-export const {
-    setPaginationDownloaded,
-    setPaginationFiltered,
-    setPage,
-    setScrollPosition,
-    setObserverPosition
-} = paginationSlice.actions;
+export const PaginationTVShowAction = paginationTVShowSlice.actions;

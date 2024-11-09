@@ -1,10 +1,11 @@
 import IMovie from "../../models/IMovie";
-import {createAsyncThunk, createSlice, isPending, isRejected,} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, isPending, isRejected, PayloadAction,} from "@reduxjs/toolkit";
 import {tmbdDataService} from "../../services/tmdbData.api.service";
 import {AxiosError} from "axios";
 import IErrorResponse from "../../models/IErrorResponse";
 import IMoviesPaginated from "../../models/IMoviesPaginated";
-import {setPaginationDownloaded} from "./paginationSlice";
+import {PaginationMovieAction} from "./paginationMovieSlice";
+
 
 interface IMoviesSlice {
     moviesDownloaded: IMovie[];
@@ -68,7 +69,7 @@ const searchMovies = createAsyncThunk(
                 movies = await tmbdDataService.getMovies(searchQuery.query)
             }
             console.log('fouind movies', movies)
-            thunkAPI.dispatch(setPaginationDownloaded(movies));
+            thunkAPI.dispatch(PaginationMovieAction.setPaginationDownloaded(movies));
             return thunkAPI.fulfillWithValue(movies.results);
         } catch (e) {
             const error = e as AxiosError<IErrorResponse>;
@@ -83,11 +84,8 @@ const endlessPaginationAction = createAsyncThunk(
     "movies/endlessPagination",
     async (searchQuery: ISearchQuery, thunkAPI) => {
         try {
-
-
             const movies = await tmbdDataService.getMovies(searchQuery.query);
-
-            thunkAPI.dispatch(setPaginationDownloaded(movies));
+            thunkAPI.dispatch(PaginationMovieAction.setPaginationDownloaded(movies));
             return thunkAPI.fulfillWithValue(movies.results);
         } catch (e) {
             const error = e as AxiosError<IErrorResponse>;
@@ -103,7 +101,7 @@ export const moviesSlice = createSlice({
     name: "movies",
     initialState,
     reducers: {
-        setChosenMovie: (state, action: { payload: IMovie }) => {
+        setChosenMovie: (state, action) => {
             state.chosenMovie = action.payload;
         },
         setLoadingState: (state, action) => {
@@ -116,11 +114,11 @@ export const moviesSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(searchMovies.fulfilled, (state, action) => {
-                state.moviesDownloaded = action.payload || [];
+                state.moviesDownloaded = (action.payload || []);
 
             })
             .addCase(endlessPaginationAction.fulfilled, (state, action) => {
-                state.moviesDownloaded = [...state.moviesDownloaded, ...action.payload || []];
+                state.moviesDownloaded = [...state.moviesDownloaded, ...(action.payload || [])];
             })
             .addMatcher(
                 isRejected(searchMovies, endlessPaginationAction),

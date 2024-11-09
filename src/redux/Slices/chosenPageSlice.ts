@@ -1,21 +1,26 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {createSlice} from "@reduxjs/toolkit";
 
 interface IChosenPage {
-  chosenPage: number;
+    chosenPageMovie: number;
+    chosenPageTVShow: number;
 }
 
 const initialState: IChosenPage = {
-  chosenPage: 1,
+    chosenPageMovie: 1,
+    chosenPageTVShow: 1,
 };
 
 export const chosenPageSlice = createSlice({
-  name: "chosenPage",
-  initialState,
-  reducers: {
-    setChosenPage: (state, action) => {
-      state.chosenPage = action.payload;
+    name: "chosenPage",
+    initialState,
+    reducers: {
+        setChosenPageMovie: (state, action) => {
+            state.chosenPageMovie = action.payload;
+        },
+        setChosenPageTVShow: (state, action) => {
+            state.chosenPageTVShow = action.payload;
+        },
     },
-  },
 });
 
-export const { setChosenPage } = chosenPageSlice.actions;
+export const {setChosenPageMovie, setChosenPageTVShow} = chosenPageSlice.actions;

@@ -1,43 +1,44 @@
 import React, {FC, memo} from "react";
-import IMovie from "../../models/IMovie";
 import StarRatings from "react-star-ratings";
-import styles from "./MovieListCard.module.css";
+import styles from "./TVShowCard.module.css";
 import {useAppDispatch} from "../../redux/store";
 import {useNavigate} from "react-router-dom";
-import MovieImagePreview from "../MovieImagePreview/MovieImagePreview";
-import {MoviesActions} from "../../redux/Slices/moviesSlice";
+import ImagePreview from "../MovieImagePreview/ImagePreview";
 import {errorImage} from "../../constants/errorImagePath";
-import {setObserverPosition} from "../../redux/Slices/paginationSlice";
+
+import ITVShow from "../../models/ITVShow";
+import {TVShowsActions} from "../../redux/Slices/tvShowsSlice";
+import {PaginationTVShowAction} from "../../redux/Slices/paginationTVShowSlice";
 
 interface IProps {
-    movie: IMovie;
+    tvShow: ITVShow;
 }
 
-const MovieListCard: FC<IProps> = memo(({movie}) => {
+const TVShowCard: FC<IProps> = memo(({tvShow}) => {
     console.log('.')
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
     const movieChoseHandler = () => {
-        dispatch(MoviesActions.setChosenMovie(movie));
-        navigate("/movieInfo");
+        dispatch(TVShowsActions.setChosenTVShow(tvShow));
+        navigate("/tv_show_info");
     };
 
     const hoverHandler = (e: React.MouseEvent<HTMLDivElement>) => {
-        dispatch(setObserverPosition(Number(e.currentTarget.className.match(/(?<=id_)\d*/))))
+        dispatch(PaginationTVShowAction.setObserverPosition(Number(e.currentTarget.className.match(/(?<=id_)\d*/))))
     }
 
     return (
         <div onClick={movieChoseHandler} onMouseEnter={hoverHandler}
-             className={[styles.card, 'observed', `id_${movie.id}`].join(' ')}>
-            <MovieImagePreview
-                poster_path={movie.poster_path}
-                title={movie.title}
+             className={[styles.card, 'observed', `id_${tvShow.id}`].join(' ')}>
+            <ImagePreview
+                poster_path={tvShow.poster_path}
+                title={tvShow.original_name}
                 error_image_path={errorImage.poster}
             />
             <div className={styles.stars}>
                 <StarRatings
-                    rating={(movie.vote_average * 6) / 10 || 0}
+                    rating={(tvShow.vote_average * 6) / 10 || 0}
                     starDimension="20px"
                     starSpacing="2px"
                     numberOfStars={6}
@@ -45,9 +46,9 @@ const MovieListCard: FC<IProps> = memo(({movie}) => {
                     starEmptyColor="#b1b1b1"
                 />
             </div>
-            <h4>{movie.title}</h4>
+            <h4>{tvShow.original_name}</h4>
         </div>
     );
 })
 
-export default MovieListCard;
+export default TVShowCard;

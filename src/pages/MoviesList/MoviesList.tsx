@@ -1,14 +1,17 @@
 import React, {FC, useEffect, useRef} from "react";
 import {useAppDispatch, useAppSelector} from "../../redux/store";
 import {MoviesActions} from "../../redux/Slices/moviesSlice";
-import MovieListCard from "../../components/MovieListCard/MovieListCard";
+import MovieCard from "../../components/MovieCard/MovieCard";
 import styles from "./MoviesList.module.css";
-import {setChosenPage} from "../../redux/Slices/chosenPageSlice";
+
 import {debounce} from "lodash";
-import ProgressBar from "../../components/ProgressBar/ProgressBar";
-import {setObserverPosition, setPaginationFiltered, setScrollPosition} from "../../redux/Slices/paginationSlice";
+
+
 import {ThreeCircles} from "react-loader-spinner";
 import {moviesFiltering} from "../../helpers/MovieFilter";
+import {setChosenPageMovie} from "../../redux/Slices/chosenPageSlice";
+import {PaginationMovieAction} from "../../redux/Slices/paginationMovieSlice";
+import ProgressBar from "../../components/ProgressBar/ProgressBar";
 
 
 const MoviesList: FC = () => {
@@ -16,24 +19,29 @@ const MoviesList: FC = () => {
     const dispatch = useAppDispatch();
 
     const {moviesDownloaded, moviesFiltered, loadingStateMovies} = useAppSelector((state) => state.Movies);
-    const {movieSearchName, chosenGenresId, loadingStateGenres} = useAppSelector((state) => state.Search);
-    const {chosenPage} = useAppSelector((state) => state.ChosenPage);
+    const {
+        searchNameMovie,
+        genresMovies,
+        chosenGenresMoviesId,
+        loadingStateGenres
+    } = useAppSelector((state) => state.Search);
+    const {chosenPageMovie} = useAppSelector((state) => state.ChosenPage);
     const {
         paginationDownloaded,
         paginationFiltered,
         observer_position,
         scroll_position,
-    } = useAppSelector((state) => state.Pagination);
-    console.log('.', observer_position, "paginationFiltered:", paginationFiltered, "paginationDownloaded:", paginationDownloaded)
+    } = useAppSelector((state) => state.PaginationMovies);
+    // console.log('.', observer_position, "paginationFiltered:", paginationFiltered, "paginationDownloaded:", paginationDownloaded)
 
     const observerRef = useRef<IntersectionObserver | null>(null);
     const movieListContainerRef = useRef<Element | null>(null);
-    const movieSearchNameRef = useRef<string>('');
-    const chosenGenresIdRef = useRef<number[]>([]);
+    const searchNameMovieRef = useRef<string>('');
+    const chosenGenresMoviesIdRef = useRef<number[]>([]);
     const chosenPageRef = useRef<number>(1);
     const pageChangeInit = () => {
-        if (movieListContainerRef.current && movieListContainerRef.current.scrollTop > movieListContainerRef.current.scrollHeight - 1500 && chosenPage !== paginationFiltered.total_pages) {
-            dispatch(setChosenPage(chosenPage + 1))
+        if (movieListContainerRef.current && movieListContainerRef.current.scrollTop > movieListContainerRef.current.scrollHeight - 1500 && chosenPageMovie !== paginationFiltered.total_pages) {
+            dispatch(setChosenPageMovie(chosenPageMovie + 1))
         }
     }
 
@@ -45,8 +53,8 @@ const MoviesList: FC = () => {
     const handleIntersection = (entries: IntersectionObserverEntry[]) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                dispatch(setObserverPosition(Number(entry.target.className.match(/(?<=id_)\d*/))))
-                dispatch(setScrollPosition(movieListContainerRef.current?.scrollTop))
+                dispatch(PaginationMovieAction.setObserverPosition(Number(entry.target.className.match(/(?<=id_)\d*/))))
+                dispatch(PaginationMovieAction.setScrollPosition(movieListContainerRef.current?.scrollTop))
             }
         });
     }
@@ -57,7 +65,7 @@ const MoviesList: FC = () => {
     }, 100)
 
     useEffect(() => {
-        console.log("use Effect 1 fired: adeventlidtener for scroll")
+        // console.log("use Effect 1 fired: adeventlidtener for scroll")
         if (loadingStateMovies) return;
         movieListContainerRef.current = document.getElementsByClassName(styles.movieListContainer)[0]
         // observeElements()
@@ -70,10 +78,10 @@ const MoviesList: FC = () => {
     }, [moviesFiltered]);
 
     useEffect(() => {
-        console.log("use Effect 2 fired: RefVariables, position scroll to position obcerver, list to observe register")
-        movieSearchNameRef.current = movieSearchName;
-        chosenGenresIdRef.current = chosenGenresId;
-        chosenPageRef.current = chosenPage;
+        // console.log("use Effect 2 fired: RefVariables, position scroll to position obcerver, list to observe register")
+        searchNameMovieRef.current = searchNameMovie;
+        chosenGenresMoviesIdRef.current = chosenGenresMoviesId;
+        chosenPageRef.current = chosenPageMovie;
 
         const observeOption: IntersectionObserverInit = {
             root: document.getElementsByClassName(styles.moviesListBase)[0] as HTMLDivElement,
@@ -87,66 +95,68 @@ const MoviesList: FC = () => {
 
         // scroll to previous position upon return to the page
         movieListContainerRef.current?.scrollTo(0, scroll_position);
-        console.log("scroll_position:", scroll_position, movieListContainerRef.current)
+        // console.log("scroll_position:", scroll_position, movieListContainerRef.current)
         return () => observerRef.current?.disconnect();
     }, []);
 
 
     useEffect(() => {
-        console.log("use Effect 3 fired: movie download logic")
+        // console.log("use Effect 3 fired: movie download logic")
         if (loadingStateMovies) return; // Prevents reloading if data is already loading
-        console.log('movieSearchNameRef.current', movieSearchNameRef.current)
-        console.log('movieSearchName', movieSearchName)
+        // console.log('searchNameMovieRef.current', searchNameMovieRef.current)
+        // console.log('searchNameMovie', searchNameMovie)
         switch (true) {
-            case !moviesFiltered.length && !moviesDownloaded.length && !movieSearchName : {
-                console.log("1: movies empty / no title", chosenPage)
+            case !moviesFiltered.length && !moviesDownloaded.length && !searchNameMovie : {
+                // console.log("1: movies empty / no title", chosenPageMovie)
 
                 dispatch(
                     MoviesActions.searchMovies({
                         searchByTitle: !!
-                            movieSearchName, query: `?page=${chosenPage}&with_genres=${chosenGenresId.join()}`,
+                            searchNameMovie,
+                        query: `?page=${chosenPageMovie}&with_genres=${chosenGenresMoviesId.join()}`,
                     })
                 )
             }
                 break;
 
-            case  movieSearchNameRef.current !== movieSearchName : {
-                console.log("2: title search > title changed")
+            case  searchNameMovieRef.current !== searchNameMovie : {
+                // console.log("2: title search > title changed")
                 dispatch(MoviesActions.searchMovies({
-                    searchByTitle: !!movieSearchName, query: `?query=${movieSearchName}&page=${chosenPage}`
+                    searchByTitle: !!searchNameMovie, query: `?query=${searchNameMovie}&page=${chosenPageMovie}`
                 }))
             }
                 break;
-            case  JSON.stringify(chosenGenresIdRef.current) !== JSON.stringify(chosenGenresId) : {
-                console.log(" chosenGenresIdRef.current:", chosenGenresIdRef.current,)
-                console.log(" chosenGenresId:", chosenGenresId,)
-                if (!!movieSearchName) {
-                    console.log("3: genres changed > with title")
-                    console.log("filtered", moviesDownloaded)
+            case  JSON.stringify(chosenGenresMoviesIdRef.current) !== JSON.stringify(chosenGenresMoviesId) : {
+                // console.log(" chosenGenresMoviesIdRef.current:", chosenGenresMoviesIdRef.current,)
+                // console.log(" chosenGenresMoviesId:", chosenGenresMoviesId,)
+                if (!!searchNameMovie) {
+                    // console.log("3: genres changed > with title")
+                    // console.log("filtered", moviesDownloaded)
                     const filtered = moviesFiltering(moviesDownloaded);
 
-                    dispatch(MoviesActions.setMoviesFiltered(filtered.results));
-                    dispatch(setPaginationFiltered(filtered));
+                    dispatch(MoviesActions.setMoviesFiltered(filtered.results || []));
+                    dispatch(PaginationMovieAction.setPaginationFiltered(filtered));
 
                 } else {
-                    console.log("4:3: genres changed > without title")
+                    // console.log("4:3: genres changed > without title")
                     dispatch(
                         MoviesActions.searchMovies({
-                            searchByTitle: !!movieSearchName,
-                            query: `?page=${chosenPage}&with_genres=${chosenGenresId.join()}`,
+                            searchByTitle: !!searchNameMovie,
+                            query: `?page=${chosenPageMovie}&with_genres=${chosenGenresMoviesId.join()}`,
                         })
                     )
                 }
             }
                 break;
-            case chosenPageRef.current !== chosenPage : {
+            case chosenPageRef.current !== chosenPageMovie : {
 
-                console.log("5: page changed for endless pagination", chosenPageRef.current, chosenPage)
-                if (!(!!movieSearchName)) {
+                // console.log("5: page changed for endless pagination", chosenPageRef.current, chosenPageMovie)
+                if (!(!!searchNameMovie)) {
                     dispatch(
                         MoviesActions.endlessPaginationAction({
                             searchByTitle: !!
-                                movieSearchName, query: `?page=${chosenPage}&with_genres=${chosenGenresId.join()}`,
+                                searchNameMovie,
+                            query: `?page=${chosenPageMovie}&with_genres=${chosenGenresMoviesId.join()}`,
                         })
                     )
                 }
@@ -154,31 +164,31 @@ const MoviesList: FC = () => {
             }
         }
 
-        movieSearchNameRef.current = movieSearchName;
-        chosenGenresIdRef.current = chosenGenresId;
-        chosenPageRef.current = chosenPage;
-    }, [movieSearchName, chosenGenresId, chosenPage]);
+        searchNameMovieRef.current = searchNameMovie;
+        chosenGenresMoviesIdRef.current = chosenGenresMoviesId;
+        chosenPageRef.current = chosenPageMovie;
+    }, [searchNameMovie, chosenGenresMoviesId, chosenPageMovie]);
 
     useEffect(() => {
-        console.log("use Effect 4 fired: dovnloaded movie changed")
+        // console.log("use Effect 4 fired: dovnloaded movie changed")
         if (loadingStateMovies) return;
-        if (!!movieSearchName) {
-            console.log("1: with title")
+        if (!!searchNameMovie) {
+            // console.log("1: with title")
             const moviesFilter = moviesFiltering(moviesDownloaded)
-            console.log("movies filtered before update", {...moviesFilter})
+            // console.log("movies filtered before update", {...moviesFilter})
             dispatch(MoviesActions.setMoviesFiltered(moviesFilter.results))
-            dispatch(setPaginationFiltered(moviesFilter))
-            console.log('movies Filtered after update', {...moviesFiltered})
+            dispatch(PaginationMovieAction.setPaginationFiltered(moviesFilter))
+            // console.log('movies Filtered after update', {...moviesFiltered})
         } else {
-            console.log("2: without title")
+            // console.log("2: without title")
             dispatch(MoviesActions.setMoviesFiltered(moviesDownloaded))
-            dispatch(setPaginationFiltered(paginationDownloaded))
+            dispatch(PaginationMovieAction.setPaginationFiltered(paginationDownloaded))
         }
 
     }, [moviesDownloaded]);
 
-    console.log("scroll_position:", scroll_position,)
-    console.log("moviesFiltered", moviesFiltered.length)
+    // console.log("scroll_position:", scroll_position,)
+    // console.log("moviesFiltered", moviesFiltered.length)
 
     return (
         <div className={styles.moviesListBase}>
@@ -197,7 +207,7 @@ const MoviesList: FC = () => {
                     {moviesFiltered.length ? (
                         // chosenPage <= 500 ? (
                         moviesFiltered.map((movie, index) => (
-                            <MovieListCard key={index} movie={movie}/>
+                            <MovieCard key={index} movie={movie}/>
                         ))
                         // )
                         // ) : (

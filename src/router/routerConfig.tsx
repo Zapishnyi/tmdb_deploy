@@ -3,6 +3,8 @@ import MainLayout from "../layouts/MainLayout/MainLayout";
 import MoviesList from "../pages/MoviesList/MoviesList";
 import MovieInfo from "../pages/MovieInfo/MovieInfo";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
+import TVShowsList from "../pages/TVShowsList/TVShowsList";
+import TVShowInfo from "../pages/TVShowInfo/TVShowInfo";
 
 export const routerConfig = createHashRouter([
     {
@@ -18,8 +20,16 @@ export const routerConfig = createHashRouter([
                 element: <MoviesList/>,
             },
             {
-                path: "/movieInfo",
+                path: "/movie_info",
                 element: <MovieInfo/>,
+            },
+            {
+                path: "/tv_shows",
+                element: <TVShowsList/>,
+            },
+            {
+                path: "/tv_show_info",
+                element: <TVShowInfo/>,
             },
         ],
     },
