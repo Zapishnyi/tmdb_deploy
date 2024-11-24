@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {chosenPageSlice} from "./Slices/chosenPageSlice";
 import {paginationTVShowSlice} from "./Slices/paginationTVShowSlice";
 import {tvShowsSlice} from "./Slices/tvShowsSlice";
+import {languageSlice} from "./Slices/lenguageSlice";
 
 export const store = configureStore({
     reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
         PaginationTVShows: paginationTVShowSlice.reducer,
         Theme: themeSlice.reducer,
         ChosenPage: chosenPageSlice.reducer,
+        Language: languageSlice.reducer,
     },
 });
 

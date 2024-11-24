@@ -2,12 +2,14 @@ import React, {FC, useEffect} from "react";
 import {useAppDispatch} from "../../redux/store";
 import SearchComponent from "../SearchComponent/SearchComponent";
 import UserInfo from "../UserInfo/UserInfo";
-import ColorThemeToggle from "../ColorThemeToggle/ColorThemeToggle";
-import SearchMenuButtonMobile from "../SearchMenuButtonMobile/SearchMenuButtonMobile";
+import SearchMenuOpenBtn from "../SearchMenuOpenBtn/SearchMenuOpenBtn";
 import styles from "./Header.module.css";
-import {Link, useLocation} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import {SearchActions} from "../../redux/Slices/searchSlice";
 import './Header.css'
+import SearchMenuCloseBtn from "../SearchMenuCloseBtn/SearchMenuCloseBtn";
+import ViewTransitionHandle from "../../helpers/ViewTransitionHandle";
+
 
 const Header: FC = () => {
     // const {chosenGenresId} = useAppSelector((state) => state.Search);
@@ -16,7 +18,7 @@ const Header: FC = () => {
     const isMovie = ['/movies', '/movie_info'].includes(location.pathname);
     const underline = document.getElementsByClassName(styles.underline)[0] as HTMLDivElement;
     isMovie ? underline?.classList.remove(styles.right) : underline?.classList.add(styles.right)
-
+    const navigate = useNavigate()
     useEffect(() => {
         dispatch(SearchActions.loadMovieGenres());
         dispatch(SearchActions.loadTVShowsGenres());
@@ -25,33 +27,38 @@ const Header: FC = () => {
     return (
         <div className={styles.header} id={"header"}>
             <div className={styles.container}>
-                <Link to={"/movies"} className={styles.logo}>
+                <div onClick={() => ViewTransitionHandle("/movies", navigate)} className={styles.logo}>
                     <img src={require("../../assets/images/TMDB_logo2.png")} alt="Logo"/>
-                </Link>
+                </div>
                 <div className={styles.menu_wrapper}>
                     <ul>
                         <li>
-                            <Link to={"/movies"}>
-                                <p>Movies</p>
-                            </Link>
+                            <p onClick={() => ViewTransitionHandle("/movies", navigate)}>Movies</p>
+
                         </li>
                         <li>
-                            <Link to={"/tv_shows"}>
-                                <p>TV Shows</p>
-                            </Link>
+
+                            <p onClick={() => ViewTransitionHandle("/tv_shows", navigate)}>TV Shows</p>
+
                         </li>
 
 
                     </ul>
                     <div className={styles.underline}></div>
                 </div>
-                <div className={styles.themeUserContainer}>
-                    <SearchMenuButtonMobile style={styles.searchComponent}/>
-                    <ColorThemeToggle/>
-                    <UserInfo/>
+                <div className={styles.instruments}>
+                    <div className={[styles.searchButton, 'searchButton'].join(' ')}>
+                        <SearchMenuOpenBtn/>
+                        <SearchMenuCloseBtn/>
+                    </div>
+                    <div className={styles.themeUserContainer}>
+
+
+                        <UserInfo/>
+                    </div>
                 </div>
-                <div className={styles.searchComponent}>
-                    <SearchComponent style={styles.searchComponent}/>
+                <div className={[styles.searchComponent, 'search'].join(' ')}>
+                    <SearchComponent/>
                 </div>
             </div>
             {/*<div className={styles.badgesContainerMobile}>*/}

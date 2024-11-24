@@ -1,9 +1,16 @@
 import React, {FC} from "react";
 import styles from "./BackButton.module.css";
+import ViewTransitionHandle from "../../helpers/ViewTransitionHandle";
+import {useNavigate} from "react-router-dom";
 
-const BackButton: FC = () => {
+interface IProps {
+    to: string
+}
+
+const BackButton: FC<IProps> = ({to}) => {
+    const navigate = useNavigate();
     return (
-        <div className={styles.backButton}>
+        <div className={styles.backButton} onClick={() => ViewTransitionHandle(to, navigate)}>
             <p>Back</p>
         </div>
     );

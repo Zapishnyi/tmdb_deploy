@@ -6,17 +6,16 @@ import {SearchActions} from "../../redux/Slices/searchSlice";
 import {useLocation, useNavigate} from "react-router-dom";
 import MagnifyingGlassBtn from "../../components/MagnifyingGlassBtn/MagnifyingGlassBtn";
 import {setChosenPageMovie, setChosenPageTVShow} from "../../redux/Slices/chosenPageSlice";
+import {SearchFade} from "../../helpers/SearchFade";
+import {CloseSearchPanel} from "../../helpers/CloseSearchPanel";
 
 
 type FormType = {
     [key: string]: boolean | string;
 };
 
-interface IProps {
-    style: string;
-}
 
-const SearchForm: FC<IProps> = ({style}) => {
+const SearchForm: FC = () => {
     console.log('.')
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
@@ -31,50 +30,65 @@ const SearchForm: FC<IProps> = ({style}) => {
     } = useAppSelector(
         (state) => state.Search
     );
+    const {language} = useAppSelector(state => state.Language)
     const isMovie = ['/movies', '/movie_info'].includes(location.pathname);
     const genresBoolean = (isMovie ? genresMovies : genresTVShows)
         // .filter((e) => isMovie ? chosenGenresMoviesId.includes(e.id) : chosenGenresTVShowsId.includes(e.id))
         .map((e) => ({[e.name]: isMovie ? chosenGenresMoviesId.includes(e.id) : chosenGenresTVShowsId.includes(e.id)}));
 
-    console.log("genresBoolean", genresBoolean)
     const {register, handleSubmit, reset} = useForm<FormType>({
         defaultValues: Object.assign({[isMovie ? "searchNameMovie" : "searchNameTVShow"]: (isMovie ? searchNameMovie : searchNameTVShow)}, ...genresBoolean)
     });
-
     useEffect(() => {
             reset(
                 Object.assign({[isMovie ? "searchNameMovie" : "searchNameTVShow"]: (isMovie ? searchNameMovie : searchNameTVShow)}, ...genresBoolean)
             )
         }
         , [isMovie]);
-    const searchBarVisibleRemove = () => {
-        const search = document.getElementsByClassName(`${style}`)[0] as HTMLDivElement
-        search.classList.remove('visible')
-    }
+
 
     const search = (formData: FormType) => {
-
+        console.log("search fired")
         dispatch(isMovie ? setChosenPageMovie(1) : setChosenPageTVShow(1));
         dispatch(isMovie ? SearchActions.setMovieSearchName(formData.searchNameMovie) : SearchActions.setTVShowSearchName(formData.searchNameTVShow));
-        searchBarVisibleRemove()
+        SearchFade()
+        CloseSearchPanel()
         navigate(isMovie ? "/movies" : "/tv_shows");
+
     };
+
 
     const genreChoiceNone = () => {
         dispatch(isMovie ? setChosenPageMovie(1) : setChosenPageTVShow(1));
         dispatch(isMovie ? SearchActions.setChosenGenresMoviesId([]) : SearchActions.setChosenGenresTVShowsId([]));
-        searchBarVisibleRemove()
+        SearchFade()
+        CloseSearchPanel()
         for (let item of Array.from(
             document.getElementsByClassName(styles.genreInput)
         ) as HTMLInputElement[]) {
             item.checked = false;
         }
-        // if (location.pathname !== "/movies") {
-        //     navigate("/movies");
-        // }
+        switch (true) {
+            case location.pathname === "/tv_show_info" :
+                navigate("/tv_shows");
+                break;
+            case location.pathname === "/movie_info":
+                navigate("movies");
+                break;
+        }
     };
 
     const genreChoiceHandler = (element: ChangeEvent<HTMLInputElement>) => {
+        switch (true) {
+            case location.pathname === "/tv_show_info" :
+                navigate("/tv_shows");
+                break;
+            case location.pathname === "/movie_info":
+                navigate("movies");
+                break;
+        }
+
+
         dispatch(isMovie ? setChosenPageMovie(1) : setChosenPageTVShow(1));
         const chosenGenreId = (isMovie ? genresMovies : genresTVShows)
             .filter((e) => e.name === element.currentTarget.name)

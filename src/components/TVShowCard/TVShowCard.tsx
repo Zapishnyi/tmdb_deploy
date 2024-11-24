@@ -1,7 +1,7 @@
 import React, {FC, memo} from "react";
 import StarRatings from "react-star-ratings";
 import styles from "./TVShowCard.module.css";
-import {useAppDispatch} from "../../redux/store";
+import {useAppDispatch, useAppSelector} from "../../redux/store";
 import {useNavigate} from "react-router-dom";
 import ImagePreview from "../MovieImagePreview/ImagePreview";
 import {errorImage} from "../../constants/errorImagePath";
@@ -9,6 +9,9 @@ import {errorImage} from "../../constants/errorImagePath";
 import ITVShow from "../../models/ITVShow";
 import {TVShowsActions} from "../../redux/Slices/tvShowsSlice";
 import {PaginationTVShowAction} from "../../redux/Slices/paginationTVShowSlice";
+import {SearchFade} from "../../helpers/SearchFade";
+import {CloseSearchPanel} from "../../helpers/CloseSearchPanel";
+import ViewTransitionHandle from "../../helpers/ViewTransitionHandle";
 
 interface IProps {
     tvShow: ITVShow;
@@ -17,11 +20,15 @@ interface IProps {
 const TVShowCard: FC<IProps> = memo(({tvShow}) => {
     console.log('.')
     const dispatch = useAppDispatch();
+
     const navigate = useNavigate();
 
     const movieChoseHandler = () => {
         dispatch(TVShowsActions.setChosenTVShow(tvShow));
-        navigate("/tv_show_info");
+
+        SearchFade()
+        CloseSearchPanel()
+        ViewTransitionHandle("/tv_show_info", navigate)
     };
 
     const hoverHandler = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -46,7 +53,7 @@ const TVShowCard: FC<IProps> = memo(({tvShow}) => {
                     starEmptyColor="#b1b1b1"
                 />
             </div>
-            <h4>{tvShow.original_name}</h4>
+            <h4>{tvShow.name}</h4>
         </div>
     );
 })

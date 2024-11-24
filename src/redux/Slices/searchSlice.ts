@@ -4,7 +4,7 @@ import {
     isPending,
     isRejected,
 } from "@reduxjs/toolkit";
-import {tmbdDataService} from "../../services/tmdbData.api.service";
+import {get} from "../../services/getTMDBData.api.service";
 import {AxiosError} from "axios";
 import IGenre from "../../models/IGenre";
 import IErrorResponse from "../../models/IErrorResponse";
@@ -33,7 +33,7 @@ const loadMovieGenres = createAsyncThunk(
     "genres/loadMovieGenres",
     async (_, thunkAPI) => {
         try {
-            const genres = await tmbdDataService.getMovieGenres.then(
+            const genres = await get.movie.genres.then(
                 ({genres}) => genres,
             );
             return thunkAPI.fulfillWithValue(genres);
@@ -50,7 +50,7 @@ const loadTVShowsGenres = createAsyncThunk(
     "genres/loadTVShowGenres",
     async (_, thunkAPI) => {
         try {
-            const genres = await tmbdDataService.getTVShowGenres.then(
+            const genres = await get.tvShow.genres.then(
                 ({genres}) => genres,
             );
             return thunkAPI.fulfillWithValue(genres);

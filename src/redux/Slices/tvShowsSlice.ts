@@ -1,5 +1,5 @@
-import {AsyncThunk, createAsyncThunk, createSlice, isPending, isRejected,} from "@reduxjs/toolkit";
-import {tmbdDataService} from "../../services/tmdbData.api.service";
+import {createAsyncThunk, createSlice, isPending, isRejected,} from "@reduxjs/toolkit";
+
 import {AxiosError} from "axios";
 import IErrorResponse from "../../models/IErrorResponse";
 
@@ -7,6 +7,7 @@ import IErrorResponse from "../../models/IErrorResponse";
 import ITVShow from "../../models/ITVShow";
 import ITVShowsPaginated from "../../models/ITVShowsPaginated";
 import {PaginationTVShowAction} from "./paginationTVShowSlice";
+import {get} from "../../services/getTMDBData.api.service";
 
 interface ITVShowsSlice {
     tvShowsDownloaded: ITVShow[];
@@ -34,7 +35,7 @@ const TVShowsDownload = async ({
                                }: ISearchQuery, TVShows: ITVShowsPaginated): Promise<ITVShowsPaginated> => {
 
     const TVShowsRecursion = async (query: string, searchByTitle: boolean, TVShows: ITVShowsPaginated): Promise<ITVShowsPaginated> => {
-        const tempTVShows = await tmbdDataService.searchTVShows(query)
+        const tempTVShows = await get.tvShow.byTitle(query)
 
         TVShows = {...tempTVShows, results: [...(TVShows.results || []), ...(tempTVShows.results || [])]};
         if (tempTVShows.total_pages !== tempTVShows.page && tempTVShows.page <= 39) {
@@ -66,7 +67,7 @@ const searchTVShows = createAsyncThunk(
                 TVShows = await TVShowsDownload(searchQuery, TVShows);
             } else {
                 console.log("search not by title")
-                TVShows = await tmbdDataService.getTVShows(searchQuery.query)
+                TVShows = await get.tvShow.byGenres(searchQuery.query)
             }
             console.log('fouind TVShows', TVShows)
             thunkAPI.dispatch(PaginationTVShowAction.setPaginationDownloaded(TVShows));
@@ -86,7 +87,7 @@ const endlessPaginationAction = createAsyncThunk(
         try {
 
 
-            const TVShows = await tmbdDataService.getTVShows(searchQuery.query);
+            const TVShows = await get.tvShow.byGenres(searchQuery.query);
 
             thunkAPI.dispatch(PaginationTVShowAction.setPaginationDownloaded(TVShows));
             return thunkAPI.fulfillWithValue(TVShows.results);

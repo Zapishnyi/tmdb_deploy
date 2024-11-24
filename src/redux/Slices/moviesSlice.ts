@@ -1,10 +1,11 @@
 import IMovie from "../../models/IMovie";
 import {createAsyncThunk, createSlice, isPending, isRejected, PayloadAction,} from "@reduxjs/toolkit";
-import {tmbdDataService} from "../../services/tmdbData.api.service";
+
 import {AxiosError} from "axios";
 import IErrorResponse from "../../models/IErrorResponse";
 import IMoviesPaginated from "../../models/IMoviesPaginated";
 import {PaginationMovieAction} from "./paginationMovieSlice";
+import {get} from "../../services/getTMDBData.api.service";
 
 
 interface IMoviesSlice {
@@ -33,7 +34,7 @@ const moviesDownload = async ({
                               }: ISearchQuery, movies: IMoviesPaginated): Promise<IMoviesPaginated> => {
 
     const moviesRecursion = async (query: string, searchByTitle: boolean, movies: IMoviesPaginated): Promise<IMoviesPaginated> => {
-        const tempMovies = await tmbdDataService.searchMovies(query)
+        const tempMovies = await get.movie.byTitle(query)
 
         movies = {...tempMovies, results: [...movies.results || [], ...tempMovies.results || []]};
         if (tempMovies.total_pages !== tempMovies.page && tempMovies.page <= 39) {
@@ -66,7 +67,7 @@ const searchMovies = createAsyncThunk(
 
             } else {
                 console.log("search not by title")
-                movies = await tmbdDataService.getMovies(searchQuery.query)
+                movies = await get.movie.byGenres(searchQuery.query)
             }
             console.log('fouind movies', movies)
             thunkAPI.dispatch(PaginationMovieAction.setPaginationDownloaded(movies));
@@ -84,7 +85,7 @@ const endlessPaginationAction = createAsyncThunk(
     "movies/endlessPagination",
     async (searchQuery: ISearchQuery, thunkAPI) => {
         try {
-            const movies = await tmbdDataService.getMovies(searchQuery.query);
+            const movies = await get.movie.byGenres(searchQuery.query);
             thunkAPI.dispatch(PaginationMovieAction.setPaginationDownloaded(movies));
             return thunkAPI.fulfillWithValue(movies.results);
         } catch (e) {

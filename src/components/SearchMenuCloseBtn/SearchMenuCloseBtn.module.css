@@ -1,0 +1,11 @@
+.wrapper {
+    cursor: pointer;
+
+    path {
+        stroke: var(--contrast_element_color);
+    }
+
+    circle {
+        stroke: var(--contrast_element_color);
+    }
+}

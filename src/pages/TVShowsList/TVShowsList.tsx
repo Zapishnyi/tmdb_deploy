@@ -1,11 +1,7 @@
 import React, {FC, useEffect, useRef} from "react";
 import {useAppDispatch, useAppSelector} from "../../redux/store";
-import {MoviesActions} from "../../redux/Slices/moviesSlice";
 import styles from "./TVShowsList.module.css";
-
 import {debounce} from "lodash";
-
-
 import {ThreeCircles} from "react-loader-spinner";
 import {setChosenPageTVShow} from "../../redux/Slices/chosenPageSlice";
 import {PaginationTVShowAction} from "../../redux/Slices/paginationTVShowSlice";
@@ -13,6 +9,7 @@ import {TVShowsActions} from "../../redux/Slices/tvShowsSlice";
 import {TVShowFiltering} from "../../helpers/TVShowFilter";
 import TVShowCard from "../../components/TVShowCard/TVShowCard";
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
+import {LanguageEnum} from "../../enums/languageEnum";
 
 
 const TVShowsList: FC = () => {
@@ -20,7 +17,6 @@ const TVShowsList: FC = () => {
     const dispatch = useAppDispatch();
 
     const {
-        chosenTVShow,
         tvShowsDownloaded,
         tvShowsFiltered,
         loadingStateTVShows
@@ -33,14 +29,14 @@ const TVShowsList: FC = () => {
         observer_position,
         scroll_position,
     } = useAppSelector((state) => state.PaginationTVShows);
-    // console.log('.', observer_position, "tvShowsDownloaded", tvShowsDownloaded, "tvShowsFiltered:", tvShowsFiltered,
-    //     "paginationFiltered:", paginationFiltered, "paginationDownloaded:", paginationDownloaded)
-
+    const {language} = useAppSelector(state => state.Language)
     const observerRef = useRef<IntersectionObserver | null>(null);
     const tvShowsListContainerRef = useRef<Element | null>(null);
     const searchNameRef = useRef<string>('');
     const chosenGenresIdRef = useRef<number[]>([]);
     const chosenPageRef = useRef<number>(1);
+    const languageRef = useRef<LanguageEnum>(LanguageEnum.US)
+
     const pageChangeInit = () => {
         if (tvShowsListContainerRef.current && tvShowsListContainerRef.current.scrollTop > tvShowsListContainerRef.current.scrollHeight - 1500 && chosenPageTVShow !== paginationFiltered.total_pages) {
             dispatch(setChosenPageTVShow(chosenPageTVShow + 1))
@@ -84,6 +80,7 @@ const TVShowsList: FC = () => {
         searchNameRef.current = searchNameTVShow;
         chosenGenresIdRef.current = chosenGenresTVShowsId;
         chosenPageRef.current = chosenPageTVShow;
+        languageRef.current = language;
 
         const observeOption: IntersectionObserverInit = {
             root: document.getElementsByClassName(styles.moviesListBase)[0] as HTMLDivElement,
@@ -103,15 +100,10 @@ const TVShowsList: FC = () => {
 
 
     useEffect(() => {
-
-        // console.log("use Effect 3 fired: tvShow download logic")
         if (loadingStateTVShows) return; // Prevents reloading if data is already loading
-        // console.log('tvShowSearchNameRef.current', searchNameRef.current)
-        // console.log('searchNameTVShow', searchNameTVShow)
+
         switch (true) {
             case !tvShowsFiltered.length && !tvShowsDownloaded.length && !searchNameTVShow : {
-                // console.log("1: movies empty / no title", chosenPageTVShow)
-
                 dispatch(
                     TVShowsActions.searchTVShows({
                         searchByTitle: !!
@@ -121,35 +113,45 @@ const TVShowsList: FC = () => {
                 )
             }
                 break;
+            case !searchNameTVShow && languageRef.current !== language : {
+                tvShowsListContainerRef.current?.scrollTo(0, 0)
+                dispatch(
+                    TVShowsActions.searchTVShows({
+                        searchByTitle: !!
+                            searchNameTVShow,
+                        query: `?page=${1}&with_genres=${chosenGenresTVShowsId.join()}&language=${language}`,
+                    })
+                )
 
-            case  searchNameRef.current !== searchNameTVShow : {
-                // console.log("2: title search > title changed")
+            }
+                break;
+            case  searchNameRef.current !== searchNameTVShow :
                 dispatch(TVShowsActions.searchTVShows({
-                    searchByTitle: !!searchNameTVShow, query: `?query=${searchNameTVShow}&page=${chosenPageTVShow}`
+                    searchByTitle: !!searchNameTVShow,
+                    query: `?query=${searchNameTVShow}&page=${chosenPageTVShow}&language=${language}`
+                }))
+                break;
+            case   searchNameTVShow && languageRef.current !== language: {
+                dispatch(TVShowsActions.searchTVShows({
+                    searchByTitle: !!searchNameTVShow,
+                    query: `?query=${searchNameTVShow}&page=${chosenPageTVShow}&language=${language}`
                 }))
             }
                 break;
-            case  JSON.stringify(chosenGenresIdRef.current) !== JSON.stringify(chosenGenresTVShowsId) : {
-                // console.log(" chosenGenresIdRef.current:", chosenGenresIdRef.current,)
-                // console.log(" chosenGenresTVShowsId:", chosenGenresTVShowsId,)
-                if (!!searchNameTVShow) {
-                    // console.log("3: genres changed > with title")
-                    // console.log("filtered", tvShowsDownloaded)
-                    const filtered = TVShowFiltering(tvShowsDownloaded);
 
+            case  JSON.stringify(chosenGenresIdRef.current) !== JSON.stringify(chosenGenresTVShowsId) :
+                if (!!searchNameTVShow) {
+                    const filtered = TVShowFiltering(tvShowsDownloaded);
                     dispatch(TVShowsActions.setTVShowsFiltered(filtered.results || []));
                     dispatch(PaginationTVShowAction.setPaginationFiltered(filtered));
-
                 } else {
-                    // console.log("4:3: genres changed > without title")
                     dispatch(
                         TVShowsActions.searchTVShows({
                             searchByTitle: !!searchNameTVShow,
-                            query: `?page=${chosenPageTVShow}&with_genres=${chosenGenresTVShowsId.join()}`,
+                            query: `?page=${chosenPageTVShow}&with_genres=${chosenGenresTVShowsId.join()}&language=${language}`,
                         })
                     )
                 }
-            }
                 break;
             case chosenPageRef.current !== chosenPageTVShow : {
 
@@ -159,7 +161,7 @@ const TVShowsList: FC = () => {
                         TVShowsActions.endlessPaginationAction({
                             searchByTitle: !!
                                 searchNameTVShow,
-                            query: `?page=${chosenPageTVShow}&with_genres=${chosenGenresTVShowsId.join()}`,
+                            query: `?page=${chosenPageTVShow}&with_genres=${chosenGenresTVShowsId.join()}&language=${language}`,
                         })
                     )
                 }
@@ -170,7 +172,8 @@ const TVShowsList: FC = () => {
         searchNameRef.current = searchNameTVShow;
         chosenGenresIdRef.current = chosenGenresTVShowsId;
         chosenPageRef.current = chosenPageTVShow;
-    }, [searchNameTVShow, chosenGenresTVShowsId, chosenPageTVShow]);
+        languageRef.current = language;
+    }, [searchNameTVShow, chosenGenresTVShowsId, chosenPageTVShow, language]);
 
     useEffect(() => {
         // console.log("use Effect 4 fired: dovnloaded movie changed")

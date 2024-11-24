@@ -1,4 +1,3 @@
-import IMovie from "./IMovie";
 import IPaginationInfo from "./IPaginationInfo";
 import ITVShow from "./ITVShow";
 

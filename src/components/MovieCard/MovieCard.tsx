@@ -2,12 +2,15 @@ import React, {FC, memo} from "react";
 import IMovie from "../../models/IMovie";
 import StarRatings from "react-star-ratings";
 import styles from "./MovieCard.module.css";
-import {useAppDispatch} from "../../redux/store";
+import {useAppDispatch, useAppSelector} from "../../redux/store";
 import {useNavigate} from "react-router-dom";
 import ImagePreview from "../MovieImagePreview/ImagePreview";
 import {MoviesActions} from "../../redux/Slices/moviesSlice";
 import {errorImage} from "../../constants/errorImagePath";
 import {PaginationMovieAction} from "../../redux/Slices/paginationMovieSlice";
+import {SearchFade} from "../../helpers/SearchFade";
+import {CloseSearchPanel} from "../../helpers/CloseSearchPanel";
+import ViewTransitionHandle from "../../helpers/ViewTransitionHandle";
 
 
 interface IProps {
@@ -19,9 +22,12 @@ const MovieCard: FC<IProps> = memo(({movie}) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
+
     const movieChoseHandler = () => {
         dispatch(MoviesActions.setChosenMovie(movie));
-        navigate("/movie_info");
+        SearchFade()
+        CloseSearchPanel()
+        ViewTransitionHandle("/movie_info", navigate)
     };
 
     const hoverHandler = (e: React.MouseEvent<HTMLDivElement>) => {

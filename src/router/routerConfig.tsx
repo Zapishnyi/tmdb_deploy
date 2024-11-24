@@ -31,6 +31,7 @@ export const routerConfig = createHashRouter([
                 path: "/tv_show_info",
                 element: <TVShowInfo/>,
             },
+
         ],
     },
     {

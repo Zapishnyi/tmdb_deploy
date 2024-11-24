@@ -1,5 +1,6 @@
 import React, {FC, SyntheticEvent} from "react";
-import {tmdbImageURL} from "../../constants/tmdbURLS";
+
+import {urlImage} from "../../constants/tmdbURLS";
 
 interface IProps {
     poster_path: string;
@@ -18,7 +19,7 @@ const ImagePreview: FC<IProps> = ({
     };
     return (
         <img
-            src={tmdbImageURL(poster_path)}
+            src={urlImage(poster_path)}
             onError={posterChangeToDefault}
             alt={title}
         />

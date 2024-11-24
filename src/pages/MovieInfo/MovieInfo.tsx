@@ -36,7 +36,7 @@ const MovieInfo: FC = () => {
                                 />
                                 <ImagePreview
                                     poster_path={chosenMovie.backdrop_path}
-                                    title={chosenMovie.title}
+                                    title={chosenMovie.original_title}
                                     error_image_path={errorImage.movieImage}
                                 />
                             </div>
@@ -62,8 +62,8 @@ const MovieInfo: FC = () => {
                         </div>
                         <p className={styles.overview}>{chosenMovie.overview}</p>
                     </div>
-                    <div className={styles.backButton} onClick={() => navigate("/movies")}>
-                        <BackButton/>
+                    <div className={styles.backButton}>
+                        <BackButton to={"/movies"}/>
                     </div>
                 </div>
 

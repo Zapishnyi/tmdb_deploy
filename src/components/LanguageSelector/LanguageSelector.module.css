@@ -1,0 +1,11 @@
+.language {
+    border: 1px solid var(--contrast_element_color);
+    border-radius: 7px;
+    
+    font-size: calc((100vw - 375px) * 0.007512 + 16px);
+    padding: 5px;
+    background: var(--background_color_lighter);
+    appearance: none;
+
+
+}

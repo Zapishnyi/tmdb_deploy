@@ -25,7 +25,8 @@ code {
 
 
 :root {
-    --mediaQuery: 800px;
+    --mediaQueryLimit: 800px;
+    --fontSizeDynamic: calc((100vw - 375px) * 0.007512 + 16px);
 }
 
 body .hide {

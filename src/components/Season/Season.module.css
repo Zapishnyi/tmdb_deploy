@@ -1,0 +1,18 @@
+.season {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+
+    .illustration {
+        img {
+            width: 20vw;
+        }
+    }
+
+    .content {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+}
