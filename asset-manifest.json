@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/tmdb_deploy/static/css/main.e0bea961.css",
-    "main.js": "/tmdb_deploy/static/js/main.8c9ee9b2.js",
+    "main.css": "/tmdb_deploy/static/css/main.688e3d47.css",
+    "main.js": "/tmdb_deploy/static/js/main.b014bd81.js",
     "static/media/user-profile.png": "/tmdb_deploy/static/media/user-profile.d203a99e24cef938832d.png",
     "static/media/image_not_found.jpg": "/tmdb_deploy/static/media/image_not_found.0d2a2f316980af5711a3.jpg",
     "static/media/TMDB_logo2.png": "/tmdb_deploy/static/media/TMDB_logo2.62b43565ac0ef5d8306f.png",
     "index.html": "/tmdb_deploy/index.html",
-    "main.e0bea961.css.map": "/tmdb_deploy/static/css/main.e0bea961.css.map",
-    "main.8c9ee9b2.js.map": "/tmdb_deploy/static/js/main.8c9ee9b2.js.map"
+    "main.688e3d47.css.map": "/tmdb_deploy/static/css/main.688e3d47.css.map",
+    "main.b014bd81.js.map": "/tmdb_deploy/static/js/main.b014bd81.js.map"
   },
   "entrypoints": [
-    "static/css/main.e0bea961.css",
-    "static/js/main.8c9ee9b2.js"
+    "static/css/main.688e3d47.css",
+    "static/js/main.b014bd81.js"
   ]
 }
