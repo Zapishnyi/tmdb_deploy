@@ -1,30 +1,36 @@
-import React, {ChangeEvent, FC} from 'react';
-
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, {SelectChangeEvent} from '@mui/material/Select';
-import LanguageIcon from "../LanguageIcon/LanguageIcon";
-import {LanguageEnum} from "../../enums/languageEnum";
-import styles from './LanguageSelector.module.css'
-import {useAppDispatch, useAppSelector} from "../../redux/store";
-import {setLanguage} from "../../redux/Slices/lenguageSlice";
+import React, { ChangeEvent, createRef, FC } from "react";
+import { LanguageEnum } from "../../enums/languageEnum";
+import styles from "./LanguageSelector.module.css";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { setLanguage } from "../../redux/Slices/lenguageSlice";
 
 const LanguageSelector: FC = () => {
-    const dispatch = useAppDispatch()
-    const handleChange = (event: ChangeEvent) => {
-        const selectItem = event.currentTarget as HTMLSelectElement;
-        dispatch(setLanguage(selectItem.value as LanguageEnum));
-        localStorage.setItem("language", JSON.stringify(selectItem.value));
-    };
-    return (
-        <select className={styles.language} name="fruit" onChange={handleChange}>
-            <option value={LanguageEnum.US} selected>US</option>
-            <option value={LanguageEnum.UA}>UA</option>
-        </select>
-
+  const { language } = useAppSelector((state) => state.Language);
+  const dispatch = useAppDispatch();
+  const handleChange = (event: React.MouseEvent<HTMLDivElement>) => {
+    dispatch(
+      setLanguage(
+        Object.values(LanguageEnum).filter((item) => item !== language)[0]
+      )
     );
+    localStorage.setItem("language", JSON.stringify(language));
+  };
+  return (
+    <div className={styles.language} onClick={handleChange}>
+      <span className={language === LanguageEnum.US ? styles.chosen : ""}>
+        US
+      </span>
+      <span className={language === LanguageEnum.UA ? styles.chosen : ""}>
+        UA
+      </span>
+      <div
+        className={[
+          styles.toggle_frame,
+          language === LanguageEnum.UA ? styles.ua : "",
+        ].join(" ")}
+      ></div>
+    </div>
+  );
 };
 
 export default LanguageSelector;

@@ -11,7 +11,8 @@
 
     img {
         width: 50px;
-        @media (width < 800px ) {
+
+        @media (width < 800px) {
             width: 30px;
         }
     }
@@ -57,18 +58,12 @@
 
 
             * {
-                color: var(--text_color_opposite);
+                color: var(--text_color);
                 stroke: var(--text_color_opposite);
 
             }
 
-            select {
-                * {
-                    color: var(--text_color);
-                }
 
-                color: var(--text_color);
-            }
         }
 
 

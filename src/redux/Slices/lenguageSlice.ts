@@ -4,7 +4,7 @@ import {LanguageEnum} from "../../enums/languageEnum";
 
 
 const initialState: IAppLanguage = {
-    language: JSON.parse(localStorage.getItem("language") || '"us"'),
+    language: JSON.parse(localStorage.getItem("language") || '"us"') as LanguageEnum,
 };
 
 export const languageSlice = createSlice({
