@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/tmdb_deploy/static/css/main.52dc633f.css",
-    "main.js": "/tmdb_deploy/static/js/main.788ec7d1.js",
+    "main.css": "/tmdb_deploy/static/css/main.fb9a2bdc.css",
+    "main.js": "/tmdb_deploy/static/js/main.774e6421.js",
     "static/media/image_not_found.jpg": "/tmdb_deploy/static/media/image_not_found.0d2a2f316980af5711a3.jpg",
     "static/media/TMDB_logo2.png": "/tmdb_deploy/static/media/TMDB_logo2.62b43565ac0ef5d8306f.png",
     "index.html": "/tmdb_deploy/index.html",
-    "main.52dc633f.css.map": "/tmdb_deploy/static/css/main.52dc633f.css.map",
-    "main.788ec7d1.js.map": "/tmdb_deploy/static/js/main.788ec7d1.js.map"
+    "main.fb9a2bdc.css.map": "/tmdb_deploy/static/css/main.fb9a2bdc.css.map",
+    "main.774e6421.js.map": "/tmdb_deploy/static/js/main.774e6421.js.map"
   },
   "entrypoints": [
-    "static/css/main.52dc633f.css",
-    "static/js/main.788ec7d1.js"
+    "static/css/main.fb9a2bdc.css",
+    "static/js/main.774e6421.js"
   ]
 }
