@@ -63,7 +63,10 @@ export const paginationMovieSlice = createSlice({
         },
         setScrollPosition: (state, action) => {
             state.scroll_position = action.payload;
-        }
+        },
+        resetScrollPosition: (state) => {
+            state.scroll_position = 0;
+        },
     },
 });
 

@@ -7,7 +7,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {chosenPageSlice} from "./Slices/chosenPageSlice";
 import {paginationTVShowSlice} from "./Slices/paginationTVShowSlice";
 import {tvShowsSlice} from "./Slices/tvShowsSlice";
-import {languageSlice} from "./Slices/lenguageSlice";
+import { languageSlice } from "./Slices/languageSlice";
+
 
 export const store = configureStore({
     reducer: {
@@ -24,5 +25,6 @@ export const store = configureStore({
 
 export const useAppSelector =
     useSelector.withTypes<ReturnType<typeof store.getState>>();
+    export type RootState = ReturnType<typeof store.getState>;
 
 export const useAppDispatch = useDispatch.withTypes<typeof store.dispatch>();

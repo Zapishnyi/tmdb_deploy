@@ -1,17 +1,21 @@
-import IMovie from "../../models/IMovie";
-import {createAsyncThunk, createSlice, isPending, isRejected, PayloadAction,} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, isPending, isRejected } from "@reduxjs/toolkit";
+import IMovie from '../../models/IMovie';
 
-import {AxiosError} from "axios";
+import { AxiosError } from "axios";
+import { moviesFiltering } from "../../helpers/MovieFilter";
 import IErrorResponse from "../../models/IErrorResponse";
 import IMoviesPaginated from "../../models/IMoviesPaginated";
-import {PaginationMovieAction} from "./paginationMovieSlice";
-import {get} from "../../services/getTMDBData.api.service";
+import { get } from "../../services/getTMDBData.api.service";
+import { RootState } from '../store';
+import { PaginationMovieAction } from "./paginationMovieSlice";
 
 
 interface IMoviesSlice {
-    moviesDownloaded: IMovie[];
+    query: string;
+    moviesDownloaded: IMovie[]
     moviesFiltered: IMovie[];
     chosenMovie: IMovie | null;
+    genresIds: number[],
     loadingStateMovies: boolean;
 }
 
@@ -21,7 +25,9 @@ interface ISearchQuery {
 }
 
 const initialState: IMoviesSlice = {
+    query: "",
     moviesDownloaded: [],
+    genresIds: [],
     moviesFiltered: [],
     chosenMovie: null,
     loadingStateMovies: false,
@@ -35,24 +41,21 @@ const moviesDownload = async ({
 
     const moviesRecursion = async (query: string, searchByTitle: boolean, movies: IMoviesPaginated): Promise<IMoviesPaginated> => {
         const tempMovies = await get.movie.byTitle(query)
-
         movies = {...tempMovies, results: [...movies.results || [], ...tempMovies.results || []]};
-        if (tempMovies.total_pages !== tempMovies.page && tempMovies.page <= 39) {
-            console.log("movie downloads", tempMovies.page, tempMovies.results, tempMovies.total_pages)
-            movies = await moviesRecursion(
+        if (tempMovies.total_pages !== tempMovies.page && tempMovies.page <= 29) {
+                movies = await moviesRecursion(
                 query.replace(/(?<=page=)\d*/, (++tempMovies.page).toString()),
                 searchByTitle,
                 {...movies})
-
-        }
+       }
         return movies
     }
     const moviesFound = await moviesRecursion(query, searchByTitle, movies);
-    if (moviesFound.page === 40) {
-        moviesFound.total_pages = 40;
-        moviesFound.total_results = 800;
+    if (moviesFound.page === 30) {
+        moviesFound.total_pages = 30;
+        moviesFound.total_results = 600;
     }
-    console.log("movies Found", moviesFound)
+ 
     return moviesFound;
 }
 
@@ -60,18 +63,44 @@ const searchMovies = createAsyncThunk(
     "movies/searchMovies",
     async (searchQuery: ISearchQuery, thunkAPI) => {
         try {
-            let movies: IMoviesPaginated = {page: 1, total_pages: 1, total_results: 0};
+            // thunkAPI.dispatch(MoviesActions.clearMoviesDownloaded());
+          const state = thunkAPI.getState() as RootState;
+            let moviesDownloaded: IMoviesPaginated 
             if (searchQuery.searchByTitle) {
-                console.log("search by title")
-                movies = await moviesDownload(searchQuery, movies);
-
-            } else {
-                console.log("search not by title")
-                movies = await get.movie.byGenres(searchQuery.query)
+                 if (state.Movies.query === searchQuery.query && state.Movies.genresIds === state.Search.chosenGenresMoviesId) {
+                    return thunkAPI.fulfillWithValue({ results: [] });
+                }
+                          thunkAPI.dispatch(PaginationMovieAction.resetScrollPosition());
+                thunkAPI.dispatch(MoviesActions.clearMoviesDownloaded());
+                 thunkAPI.dispatch(MoviesActions.clearMoviesFiltered());
+                thunkAPI.dispatch(PaginationMovieAction.resetScrollPosition());
+                        thunkAPI.dispatch(PaginationMovieAction.setPage(1));
+               
+                const movies: IMoviesPaginated = { page: 1, total_pages: 1, total_results: 0 };
+                moviesDownloaded = await moviesDownload(searchQuery, movies);
+                const moviesFiltered = moviesFiltering(moviesDownloaded.results || []);
+                thunkAPI.dispatch(MoviesActions.setMoviesFiltered(moviesFiltered.results));
+                thunkAPI.dispatch(PaginationMovieAction.setPaginationFiltered(moviesFiltered));
+                        } else {
+                if (state.Movies.query === searchQuery.query) {
+                 return thunkAPI.fulfillWithValue({ results: [] });
+                } else {
+                        if (state.Movies.query.includes("query=") || !state.Movies.query.includes(`language=${state.Language.language}`) ||((state.Movies.query.match(/(?<=with_genres=)[^&]+/g)||[])[0]||"void") !== ( state.Search.chosenGenresMoviesId.join(",") ||"void" )) {
+                        thunkAPI.dispatch(MoviesActions.clearMoviesDownloaded());
+                        thunkAPI.dispatch(MoviesActions.clearMoviesFiltered());
+                        thunkAPI.dispatch(PaginationMovieAction.resetScrollPosition());
+                        thunkAPI.dispatch(PaginationMovieAction.setPage(1));
+                       searchQuery.query = `?page=1&with_genres=${state.Search.chosenGenresMoviesId.join(",")}&language=${state.Language.language}`
+                    }
+                    moviesDownloaded = await get.movie.byGenres(searchQuery.query)
+                }
+               const updatedState =  thunkAPI.getState() as RootState;
+               thunkAPI.dispatch(MoviesActions.setMoviesFiltered([...updatedState.Movies.moviesDownloaded,...(moviesDownloaded.results||[])]));
+               thunkAPI.dispatch(PaginationMovieAction.setPaginationFiltered(moviesDownloaded));
             }
-            console.log('fouind movies', movies)
-            thunkAPI.dispatch(PaginationMovieAction.setPaginationDownloaded(movies));
-            return thunkAPI.fulfillWithValue(movies.results);
+            thunkAPI.dispatch(MoviesActions.setQuery(searchQuery.query));
+            thunkAPI.dispatch(MoviesActions.setGenresIds(state.Search.chosenGenresMoviesId));
+            return thunkAPI.fulfillWithValue(moviesDownloaded);
         } catch (e) {
             const error = e as AxiosError<IErrorResponse>;
             return thunkAPI.rejectWithValue(error.response?.data.status_message);
@@ -80,23 +109,6 @@ const searchMovies = createAsyncThunk(
         }
     },
 );
-
-const endlessPaginationAction = createAsyncThunk(
-    "movies/endlessPagination",
-    async (searchQuery: ISearchQuery, thunkAPI) => {
-        try {
-            const movies = await get.movie.byGenres(searchQuery.query);
-            thunkAPI.dispatch(PaginationMovieAction.setPaginationDownloaded(movies));
-            return thunkAPI.fulfillWithValue(movies.results);
-        } catch (e) {
-            const error = e as AxiosError<IErrorResponse>;
-            return thunkAPI.rejectWithValue(error.response?.data.status_message);
-        } finally {
-            thunkAPI.dispatch(MoviesActions.setLoadingState(false));
-        }
-    },
-);
-
 
 export const moviesSlice = createSlice({
     name: "movies",
@@ -105,24 +117,33 @@ export const moviesSlice = createSlice({
         setChosenMovie: (state, action) => {
             state.chosenMovie = action.payload;
         },
-        setLoadingState: (state, action) => {
+             setLoadingState: (state, action) => {
             state.loadingStateMovies = action.payload;
         },
         setMoviesFiltered: (state, action) => {
             state.moviesFiltered = action.payload;
+        },
+        clearMoviesDownloaded: (state) => {
+            state.moviesDownloaded = [];
+        },
+        clearMoviesFiltered: (state) => {
+            state.moviesFiltered = [];
+        },
+        setQuery: (state, action) => {
+            state.query = action.payload;
+        },
+        setGenresIds: (state, action) => {
+            state.genresIds = action.payload;
         }
+
     },
     extraReducers: (builder) => {
         builder
             .addCase(searchMovies.fulfilled, (state, action) => {
-                state.moviesDownloaded = (action.payload || []);
-
-            })
-            .addCase(endlessPaginationAction.fulfilled, (state, action) => {
-                state.moviesDownloaded = [...state.moviesDownloaded, ...(action.payload || [])];
-            })
-            .addMatcher(
-                isRejected(searchMovies, endlessPaginationAction),
+                state.moviesDownloaded = [...state.moviesDownloaded, ...(action.payload.results || [])];
+               })
+             .addMatcher(
+                isRejected(searchMovies),
                 (state, action) => {
                     console.log(
                         "Movies receive sequence failed with error:",
@@ -142,5 +163,4 @@ export const moviesSlice = createSlice({
 export const MoviesActions = {
     ...moviesSlice.actions,
     searchMovies,
-    endlessPaginationAction
-};
+   };

@@ -1,29 +1,24 @@
-import React, { FC, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useAppSelector } from "../../redux/store";
-import styles from "./TVShowInfo.module.css";
-import ImagePreview from "../../components/MovieImagePreview/ImagePreview";
-import StarRatings from "react-star-ratings";
-import { errorImage } from "../../constants/errorImagePath";
-import GenresBadgeSet from "../../components/GenresBadgeSet/GenresBadgeSet";
-import BackButton from "../../components/BackButton/BackButton";
-import { get } from "../../services/getTMDBData.api.service";
 import { AxiosError } from "axios";
+import { FC, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import StarRatings from "react-star-ratings";
+import BackButton from "../../components/BackButton/BackButton";
+import GenresBadgeSet from "../../components/GenresBadgeSet/GenresBadgeSet";
+import ImagePreview from "../../components/MovieImagePreview/ImagePreview";
+import { errorImage } from "../../constants/errorImagePath";
 import IErrorResponse from "../../models/IErrorResponse";
 import ITVShowDetails from "../../models/ITVShowDetails";
-
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useAppSelector } from "../../redux/store";
+import { get } from "../../services/getTMDBData.api.service";
+import styles from "./TVShowInfo.module.css";
 
 import AvatarIcon from "../../components/AvatarIcon/AvatarIcon";
-import ArrowRightAltRoundedIcon from "@mui/icons-material/ArrowRightAltRounded";
-import { urlImage } from "../../constants/tmdbURLS";
 import Season from "../../components/Season/Season";
-import ITVShowSeason from "../../models/ITVShowSeason";
-import ITVShowEpisode from "../../models/ITVShowEpisode";
+import { urlImage } from "../../constants/tmdbURLS";
 import { CloseSearchPanel } from "../../helpers/CloseSearchPanel";
+import ITVShowEpisode from "../../models/ITVShowEpisode";
+import { Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const TVShowInfo: FC = () => {
   const location = useLocation();
@@ -75,6 +70,9 @@ const TVShowInfo: FC = () => {
                   poster_path={tvShow.backdrop_path}
                   title={tvShow.name}
                   error_image_path={errorImage.movieImage}
+                  width_desktop={"45vw"}
+                  width_mobile={"95vw"}
+                  aspect_ratio={1.78}
                 />
               </div>
               <div className={styles.info}>
@@ -99,10 +97,10 @@ const TVShowInfo: FC = () => {
                 <p className={styles.homepage}>
                   <a
                     href={tvShow.homepage}
-                    target="_blan"
+                    target="blank"
                     rel="noopener noreferrer"
                   >
-                    Homepage <ArrowRightAltRoundedIcon />
+                    Homepage
                   </a>
                 </p>
                 {tvShow.adult && (

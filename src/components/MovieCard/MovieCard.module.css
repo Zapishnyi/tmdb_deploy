@@ -2,25 +2,21 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    width: 250px;
-    height: 480px;
+    width: 300px;
+    /* height: 480px; */
     margin: 20px 10px;
     scale: 1;
     transition: 0.3s;
     cursor: pointer;
 
 
-    img {
-
-
-    }
-
     .stars {
         margin: 0 5px;
     }
 
     h4 {
-        margin: 0 5px;
+        margin: 0 5px 5px 5px;
+        text-wrap: balance;
     }
 }
 
@@ -28,4 +24,3 @@
     scale: 1.05;
     box-shadow: 0 0 15px #a7a7a7;
 }
-

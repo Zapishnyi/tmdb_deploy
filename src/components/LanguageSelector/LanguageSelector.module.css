@@ -1,7 +1,7 @@
 .language {
     position: relative;
     border: 1px solid var(--contrast_element_color);
-    border-radius: 7px;
+    border-radius: 10px;
 
     font-size: calc((100vw - 375px) * 0.007512 + 12px);
     padding: 3px;

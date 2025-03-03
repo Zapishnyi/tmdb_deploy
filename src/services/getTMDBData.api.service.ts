@@ -5,6 +5,8 @@ import ITVShowsPaginated from "../models/ITVShowsPaginated";
 import {url, urlBase} from "../constants/tmdbURLS";
 import IMovieDetails from "../models/IMovieDetails";
 import ITVShowDetails from "../models/ITVShowDetails";
+import { ICredits } from "../models/ICredits";
+import IImages from "../models/IImages";
 
 const axiosInstance = axios.create({
     baseURL: urlBase,
@@ -21,7 +23,9 @@ interface ITmdbDataApiService {
         genres: Promise<IGenres>;
         byGenres: (query: string) => Promise<IMoviesPaginated>
         byTitle: (query: string) => Promise<IMoviesPaginated>
-        byId: (id: number) => Promise<IMovieDetails>
+        byId: (id: number, language:string) => Promise<IMovieDetails>
+        credits: (id: number, language:string) => Promise<ICredits>
+        images: (id: number, language:string) => Promise<IImages>
     },
     tvShow: {
         genres: Promise<IGenres>;
@@ -45,9 +49,17 @@ export const get: ITmdbDataApiService = {
             axiosInstance
                 .get(url.movie.allByTitle(query))
                 .then((value) => value.data),
-        byId: (id) =>
+        byId: (id,language) =>
             axiosInstance
-                .get(url.movie.oneById(id))
+                .get(url.movie.oneById(id,language))
+                .then((value) => value.data),
+        credits: (id, language) =>
+            axiosInstance
+                .get(url.movie.credits(id,language))
+                .then((value) => value.data),
+        images: (id, language) =>
+            axiosInstance
+                .get(url.movie.images(id,language))
                 .then((value) => value.data),
     },
     tvShow: {
@@ -74,4 +86,4 @@ export const get: ITmdbDataApiService = {
 }
 
 
-// const subscribeToWaitList = (cb: IWaitList) => {
+
