@@ -1,0 +1,14 @@
+.settings {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    box-sizing: content-box;
+    padding: 20px 2vw;
+    transition: transform 0.3s ease-in-out;
+    transform: rotate(0deg)
+}
+
+.settings:hover {
+    transition: transform 0.3s ease-in-out;
+    transform: rotate(90deg)
+}
