@@ -1,6 +1,5 @@
 .languageIcon {
-    width: 25px;
-    height: 25px;
-    fill: var(--contrast_element_color);
-   
+  width: 25px;
+  height: 25px;
+  fill: var(--contrast_element_color);
 }

@@ -1,11 +1,9 @@
-import React, {FC} from "react";
+import React, { FC } from 'react';
 
-import SearchForm from "../../forms/SearchForm/SearchForm";
-
+import SearchForm from '../../forms/SearchForm/SearchForm';
 
 const SearchComponent: FC = () => {
-
-    return <SearchForm/>;
+  return <SearchForm />;
 };
 
 export default SearchComponent;

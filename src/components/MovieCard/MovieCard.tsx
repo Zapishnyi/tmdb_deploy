@@ -1,23 +1,26 @@
-import React, { FC, memo } from "react";
-import { useNavigate } from "react-router-dom";
-import StarRatings from "react-star-ratings";
-import { errorImage } from "../../constants/errorImagePath";
-import { CloseSearchPanel } from "../../helpers/CloseSearchPanel";
-import { SearchFade } from "../../helpers/SearchFade";
-import ViewTransitionHandle from "../../helpers/ViewTransitionHandle";
-import IMovie from "../../models/IMovie";
-import { MoviesActions } from "../../redux/Slices/moviesSlice";
-import { PaginationMovieAction } from "../../redux/Slices/paginationMovieSlice";
-import { useAppDispatch } from "../../redux/store";
-import ImagePreview from "../MovieImagePreview/ImagePreview";
-import styles from "./MovieCard.module.css";
+import React, { FC, memo } from 'react';
+
+import { useNavigate } from 'react-router-dom';
+import StarRatings from 'react-star-ratings';
+
+import { errorImage } from '../../constants/errorImagePath';
+import { CloseSearchPanel } from '../../helpers/CloseSearchPanel';
+import { SearchFade } from '../../helpers/SearchFade';
+import ViewTransitionHandle from '../../helpers/ViewTransitionHandle';
+import IMovie from '../../models/IMovie';
+import { MoviesActions } from '../../redux/Slices/moviesSlice';
+import { PaginationMovieAction } from '../../redux/Slices/paginationMovieSlice';
+import { useAppDispatch } from '../../redux/store';
+import ImagePreview from '../MovieImagePreview/ImagePreview';
+
+import styles from './MovieCard.module.css';
 
 interface IProps {
   movie: IMovie;
 }
 
 const MovieCard: FC<IProps> = memo(({ movie }) => {
-  console.log(".");
+  console.log('.');
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -25,29 +28,25 @@ const MovieCard: FC<IProps> = memo(({ movie }) => {
     dispatch(MoviesActions.setChosenMovie(movie));
     SearchFade();
     CloseSearchPanel();
-    ViewTransitionHandle("/movie_info", navigate);
+    ViewTransitionHandle('/movie_info', navigate);
   };
 
   const hoverHandler = (e: React.MouseEvent<HTMLDivElement>) => {
-    dispatch(
-      PaginationMovieAction.setObserverPosition(
-        Number(e.currentTarget.className.match(/(?<=id_)\d*/))
-      )
-    );
+    dispatch(PaginationMovieAction.setObserverPosition(Number(e.currentTarget.className.match(/(?<=id_)\d*/))));
   };
 
   return (
     <div
       onClick={movieChoseHandler}
       onMouseEnter={hoverHandler}
-      className={[styles.card, "observed", `id_${movie.id}`].join(" ")}
+      className={[styles.card, 'observed', `id_${movie.id}`].join(' ')}
     >
       <ImagePreview
         poster_path={movie.poster_path}
         title={movie.title}
         error_image_path={errorImage.poster}
-        width_desktop={"300px"}
-        width_mobile={"300px"}
+        width_desktop={'300px'}
+        width_mobile={'300px'}
         aspect_ratio={0.66}
       />
       <div className={styles.stars}>

@@ -1,46 +1,43 @@
-import { AxiosError } from "axios";
-import { FC, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import StarRatings from "react-star-ratings";
-import BackButton from "../../components/BackButton/BackButton";
-import GenresBadgeSet from "../../components/GenresBadgeSet/GenresBadgeSet";
-import ImagePreview from "../../components/MovieImagePreview/ImagePreview";
-import { errorImage } from "../../constants/errorImagePath";
-import IErrorResponse from "../../models/IErrorResponse";
-import ITVShowDetails from "../../models/ITVShowDetails";
-import { useAppSelector } from "../../redux/store";
-import { get } from "../../services/getTMDBData.api.service";
-import styles from "./TVShowInfo.module.css";
+import { FC, useEffect, useState } from 'react';
 
-import AvatarIcon from "../../components/AvatarIcon/AvatarIcon";
-import Season from "../../components/Season/Season";
-import { urlImage } from "../../constants/tmdbURLS";
-import { CloseSearchPanel } from "../../helpers/CloseSearchPanel";
-import ITVShowEpisode from "../../models/ITVShowEpisode";
-import { Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import { AxiosError } from 'axios';
+import { useLocation } from 'react-router-dom';
+import StarRatings from 'react-star-ratings';
+
+import AvatarIcon from '../../components/AvatarIcon/AvatarIcon';
+import BackButton from '../../components/BackButton/BackButton';
+import GenresBadgeSet from '../../components/GenresBadgeSet/GenresBadgeSet';
+import ImagePreview from '../../components/MovieImagePreview/ImagePreview';
+import Season from '../../components/Season/Season';
+import { errorImage } from '../../constants/errorImagePath';
+import { urlImage } from '../../constants/tmdbURLS';
+import { CloseSearchPanel } from '../../helpers/CloseSearchPanel';
+import IErrorResponse from '../../models/IErrorResponse';
+import ITVShowDetails from '../../models/ITVShowDetails';
+import ITVShowEpisode from '../../models/ITVShowEpisode';
+import { useAppSelector } from '../../redux/store';
+import { get } from '../../services/getTMDBData.api.service';
+
+import styles from './TVShowInfo.module.css';
 
 const TVShowInfo: FC = () => {
   const location = useLocation();
-  const isMovie = ["/movies", "/movie_info"].includes(location.pathname);
+  const isMovie = ['/movies', '/movie_info'].includes(location.pathname);
   const { chosenTVShow } = useAppSelector((state) => state.TVShows);
   const { language } = useAppSelector((state) => state.Language);
 
   // dispatch(setScrollPosition(tvShow?.id || scroll_position))
-  const getLanguage = (code: string) =>
-    new Intl.DisplayNames(["en"], { type: "language" }).of(code);
+  const getLanguage = (code: string) => new Intl.DisplayNames(['en'], { type: 'language' }).of(code);
   const [tvShow, setTVShow] = useState<ITVShowDetails | null>(null);
-  const [tvShowSeasonEpisodes, setTVShowSeasons] = useState<
-    ITVShowEpisode[] | null
-  >(null);
+  const [tvShowSeasonEpisodes, setTVShowSeasons] = useState<ITVShowEpisode[] | null>(null);
   useEffect(() => {
     try {
       if (chosenTVShow) {
-        get.tvShow
-          .byId(chosenTVShow.id, `language=${language}`)
-          .then((value) => {
-            setTVShow(value);
-          });
+        get.tvShow.byId(chosenTVShow.id, `language=${language}`).then((value) => {
+          setTVShow(value);
+        });
         // if (tvShow) {
         //     setTVShowSeasons( tvShow.seasons.map await Promise.all())
         // }
@@ -54,7 +51,7 @@ const TVShowInfo: FC = () => {
     // }
   }, [language]);
 
-  console.log("tvShow", tvShow);
+  console.log('tvShow', tvShow);
   return (
     <div className={styles.base} onClick={CloseSearchPanel}>
       {tvShow && (
@@ -62,16 +59,13 @@ const TVShowInfo: FC = () => {
           <div className={styles.container}>
             <div className={styles.short_info}>
               <div className={styles.genresContainer}>
-                <GenresBadgeSet
-                  key={tvShow.id}
-                  genres_ids={tvShow.genres.map((e) => e.id)}
-                />
+                <GenresBadgeSet key={tvShow.id} genres_ids={tvShow.genres.map((e) => e.id)} />
                 <ImagePreview
                   poster_path={tvShow.backdrop_path}
                   title={tvShow.name}
                   error_image_path={errorImage.movieImage}
-                  width_desktop={"45vw"}
-                  width_mobile={"95vw"}
+                  width_desktop={'45vw'}
+                  width_mobile={'95vw'}
                   aspect_ratio={1.78}
                 />
               </div>
@@ -88,26 +82,17 @@ const TVShowInfo: FC = () => {
                 />
 
                 <p>
-                  Seasons:{" "}
-                  {tvShow.seasons[tvShow.seasons.length - 1].season_number}{" "}
+                  Seasons: {tvShow.seasons[tvShow.seasons.length - 1].season_number}{' '}
                   {tvShow.in_production && <span> - in production...</span>}
                 </p>
                 <p>Release date: {tvShow.first_air_date}</p>
                 <p>Language: {getLanguage(tvShow.original_language)}</p>
                 <p className={styles.homepage}>
-                  <a
-                    href={tvShow.homepage}
-                    target="blank"
-                    rel="noopener noreferrer"
-                  >
+                  <a href={tvShow.homepage} target="blank" rel="noopener noreferrer">
                     Homepage
                   </a>
                 </p>
-                {tvShow.adult && (
-                  <p className={styles.adultContentWarning}>
-                    Parental advisory: explicit content
-                  </p>
-                )}
+                {tvShow.adult && <p className={styles.adultContentWarning}>Parental advisory: explicit content</p>}
               </div>
             </div>
 
@@ -115,11 +100,7 @@ const TVShowInfo: FC = () => {
             <div className={styles.accordion}>
               {tvShow.networks.length > 0 && (
                 <Accordion>
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1-content"
-                    id="panel1-header"
-                  >
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1-content" id="panel1-header">
                     Networks
                   </AccordionSummary>
                   <AccordionDetails>
@@ -133,31 +114,22 @@ const TVShowInfo: FC = () => {
               )}
               {tvShow.created_by.length > 0 && (
                 <Accordion>
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel2-content"
-                    id="panel2-header"
-                  >
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel2-content" id="panel2-header">
                     Created by...
                   </AccordionSummary>
                   <AccordionDetails>
                     <div className={styles.avatars}>
                       {tvShow.created_by.map((e, i) => (
-                        <AvatarIcon
-                          key={i}
-                          name={e.name}
-                          iconPath={e.profile_path}
-                        />
+                        <AvatarIcon key={i} name={e.name} iconPath={e.profile_path} />
                       ))}
                     </div>
                   </AccordionDetails>
                 </Accordion>
               )}
-              {tvShow.seasons.length > 0 &&
-                tvShow.seasons.map((e) => <Season key={e.id} season={e} />)}
+              {tvShow.seasons.length > 0 && tvShow.seasons.map((e) => <Season key={e.id} season={e} />)}
             </div>
             <div className={styles.backButton}>
-              <BackButton to={isMovie ? "/movies" : "/tv_shows"} />
+              <BackButton to={isMovie ? '/movies' : '/tv_shows'} />
             </div>
           </div>
         </div>

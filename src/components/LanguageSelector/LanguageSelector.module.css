@@ -1,49 +1,50 @@
 .language {
-    position: relative;
+  position: relative;
+  border: 1px solid var(--contrast_element_color);
+  border-radius: 10px;
+
+  font-size: calc((100vw - 375px) * 0.007512 + 12px);
+  padding: 3px;
+  margin: 03px;
+  background: var(--background_color_lighter);
+  appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+
+  span {
+    scale: 0.7;
+    opacity: 0.7;
+    margin: 3px;
+    transition:
+      scale 0.3s ease-in-out,
+      opacity 0.3s ease-in-out;
+  }
+
+  .chosen {
+    scale: 1;
+    opacity: 1;
+    transition:
+      scale 0.3s ease-in-out,
+      opacity 0.3s ease-in-out;
+  }
+
+  .toggle_frame {
     border: 1px solid var(--contrast_element_color);
-    border-radius: 10px;
+    border-radius: 7px;
+    position: absolute;
+    height: 90%;
+    width: 45%;
+    top: 50%;
+    left: 5%;
+    transform: translateY(-50%);
+    background: rgba(203, 141, 141, 0.242);
+    box-shadow: 0 0 5px #8d8d8d;
+    transition: left 0.3s ease-in-out;
+  }
 
-    font-size: calc((100vw - 375px) * 0.007512 + 12px);
-    padding: 3px;
-    margin: 03px;
-    background: var(--background_color_lighter);
-    appearance: none;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-
-    span {
-        scale: 0.7;
-        opacity: 0.7;
-        margin: 3px;
-        transition: scale 0.3s ease-in-out, opacity 0.3s ease-in-out;
-    }
-
-    .chosen {
-        scale: 1;
-        opacity: 1;
-        transition: scale 0.3s ease-in-out, opacity 0.3s ease-in-out;
-    }
-
-
-
-    .toggle_frame {
-        border: 1px solid var(--contrast_element_color);
-        border-radius: 7px;
-        position: absolute;
-        height: 90%;
-        width: 45%;
-        top: 50%;
-        left: 5%;
-        transform: translateY(-50%);
-        background: rgba(203, 141, 141, 0.242);
-        box-shadow: 0 0 5px #8d8d8d;
-        transition: left 0.3s ease-in-out;
-
-    }
-
-    .ua {
-        left: 50%;
-        transition: left 0.3s ease-in-out;
-    }
+  .ua {
+    left: 50%;
+    transition: left 0.3s ease-in-out;
+  }
 }

@@ -1,26 +1,24 @@
 .card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    width: 300px;
-    margin: 20px 10px;
-    scale: 1;
-    transition: 0.3s;
-    cursor: pointer;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  margin: 20px 10px;
+  scale: 1;
+  transition: 0.3s;
+  cursor: pointer;
 
+  .stars {
+    margin: 0 5px;
+  }
 
-
-    .stars {
-        margin: 0 5px;
-    }
-
-    h4 {
-        margin: 0 5px;
-        text-wrap: balance;
-    }
+  h4 {
+    margin: 0 5px;
+    text-wrap: balance;
+  }
 }
 
 .card:hover {
-    scale: 1.05;
-    box-shadow: 0 0 15px #a7a7a7;
+  scale: 1.05;
+  box-shadow: 0 0 15px #a7a7a7;
 }

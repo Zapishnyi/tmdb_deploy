@@ -1,6 +1,6 @@
-import React, { FC, SyntheticEvent } from "react";
+import { FC, SyntheticEvent } from 'react';
 
-import { urlImage } from "../../constants/tmdbURLS";
+import { urlImage } from '../../constants/tmdbURLS';
 
 interface IProps {
   poster_path: string;
@@ -23,7 +23,7 @@ const ImagePreview: FC<IProps> = ({
     e.currentTarget.onerror = null;
     e.currentTarget.src = error_image_path;
   };
-  const isMobile = window.matchMedia("(width < 800px)").matches;
+  const isMobile = window.matchMedia('(width < 800px)').matches;
   return (
     <div
       style={{

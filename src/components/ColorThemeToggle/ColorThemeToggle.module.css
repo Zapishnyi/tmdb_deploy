@@ -1,7 +1,6 @@
 .theme_toggle {
- * {
-   transition-duration: 0.1s;
-   animation-duration: 0.1s;
- }
-
+  * {
+    transition-duration: 0.1s;
+    animation-duration: 0.1s;
+  }
 }

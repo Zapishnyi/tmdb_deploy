@@ -1,24 +1,26 @@
-import React, { FC, memo } from "react";
-import StarRatings from "react-star-ratings";
-import styles from "./TVShowCard.module.css";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
-import { useNavigate } from "react-router-dom";
-import ImagePreview from "../MovieImagePreview/ImagePreview";
-import { errorImage } from "../../constants/errorImagePath";
+import React, { FC, memo } from 'react';
 
-import ITVShow from "../../models/ITVShow";
-import { TVShowsActions } from "../../redux/Slices/tvShowsSlice";
-import { PaginationTVShowAction } from "../../redux/Slices/paginationTVShowSlice";
-import { SearchFade } from "../../helpers/SearchFade";
-import { CloseSearchPanel } from "../../helpers/CloseSearchPanel";
-import ViewTransitionHandle from "../../helpers/ViewTransitionHandle";
+import { useNavigate } from 'react-router-dom';
+import StarRatings from 'react-star-ratings';
+
+import { errorImage } from '../../constants/errorImagePath';
+import { CloseSearchPanel } from '../../helpers/CloseSearchPanel';
+import { SearchFade } from '../../helpers/SearchFade';
+import ViewTransitionHandle from '../../helpers/ViewTransitionHandle';
+import ITVShow from '../../models/ITVShow';
+import { PaginationTVShowAction } from '../../redux/Slices/paginationTVShowSlice';
+import { TVShowsActions } from '../../redux/Slices/tvShowsSlice';
+import { useAppDispatch } from '../../redux/store';
+import ImagePreview from '../MovieImagePreview/ImagePreview';
+
+import styles from './TVShowCard.module.css';
 
 interface IProps {
   tvShow: ITVShow;
 }
 
 const TVShowCard: FC<IProps> = memo(({ tvShow }) => {
-  console.log(".");
+  console.log('.');
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
@@ -28,29 +30,25 @@ const TVShowCard: FC<IProps> = memo(({ tvShow }) => {
 
     SearchFade();
     CloseSearchPanel();
-    ViewTransitionHandle("/tv_show_info", navigate);
+    ViewTransitionHandle('/tv_show_info', navigate);
   };
 
   const hoverHandler = (e: React.MouseEvent<HTMLDivElement>) => {
-    dispatch(
-      PaginationTVShowAction.setObserverPosition(
-        Number(e.currentTarget.className.match(/(?<=id_)\d*/))
-      )
-    );
+    dispatch(PaginationTVShowAction.setObserverPosition(Number(e.currentTarget.className.match(/(?<=id_)\d*/))));
   };
 
   return (
     <div
       onClick={movieChoseHandler}
       onMouseEnter={hoverHandler}
-      className={[styles.card, "observed", `id_${tvShow.id}`].join(" ")}
+      className={[styles.card, 'observed', `id_${tvShow.id}`].join(' ')}
     >
       <ImagePreview
         poster_path={tvShow.poster_path}
         title={tvShow.original_name}
         error_image_path={errorImage.poster}
-        width_desktop={"300px"}
-        width_mobile={"300px"}
+        width_desktop={'300px'}
+        width_mobile={'300px'}
         aspect_ratio={0.66}
       />
       <div className={styles.stars}>

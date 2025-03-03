@@ -1,5 +1,4 @@
 .searchPage {
-    background: var(--background_color_lighter);
-    height: 90dvh;
-
+  background: var(--background_color_lighter);
+  height: 90dvh;
 }

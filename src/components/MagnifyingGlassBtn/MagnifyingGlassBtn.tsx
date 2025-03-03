@@ -1,5 +1,6 @@
-import React from "react";
-import styles from "./MagnifyingGlass.module.css";
+import React from 'react';
+
+import styles from './MagnifyingGlass.module.css';
 
 const MagnifyingGlassBtn = () => {
   return (

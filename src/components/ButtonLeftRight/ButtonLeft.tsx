@@ -1,5 +1,6 @@
-import React from "react";
-import styles from "./ButtonLeftRight.module.css";
+import React from 'react';
+
+import styles from './ButtonLeftRight.module.css';
 
 const ButtonLeft = () => {
   return (

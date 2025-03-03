@@ -1,16 +1,18 @@
 .backButton {
-    background: var(--buttons_backgrond_color);
-    width: fit-content;
-    cursor: pointer;
-    filter: drop-shadow(0 0 5px #9b9b9b);
-    margin: 0 auto 30px auto;
-    transition: background-color 0.3s;
-    padding: 0 10px;
-    border-radius: 5px;
+  position: fixed;
+  bottom: 20px;
+  left: calc(50% - 50px);
+  background: var(--buttons_background_color);
+  width: fit-content;
+  cursor: pointer;
+  filter: drop-shadow(0 0 5px #9b9b9b);
+  /* margin: 0 auto 30px auto; */
+  transition: background-color 0.3s;
+  padding: 5px 15px;
+  border-radius: 20px;
+  border: 1px solid #9c9c9c;
 }
 
 .backButton:hover {
-    background: var(--buttons_backgrond_color_hover);
-
+  background: var(--buttons_background_color_hover);
 }
-

@@ -1,9 +1,12 @@
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
-import { FC } from "react";
-import { urlImage } from "../../constants/tmdbURLS";
-import ITVShowSeason from "../../models/ITVShowSeason";
-import styles from "./Season.module.css";
+import { FC } from 'react';
+
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+
+import { urlImage } from '../../constants/tmdbURLS';
+import ITVShowSeason from '../../models/ITVShowSeason';
+
+import styles from './Season.module.css';
 
 interface IProps {
   season: ITVShowSeason;

@@ -1,5 +1,5 @@
-import IGenre from "./IGenre";
+import IGenre from './IGenre';
 
 export default interface IGenres {
-    genres:IGenre[]
+  genres: IGenre[];
 }

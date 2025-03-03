@@ -1,7 +1,9 @@
-import React, { FC } from "react";
-import styles from "./PaginationComponent.module.css";
-import ButtonRight from "../ButtonLeftRight/ButtonRight";
-import ButtonLeft from "../ButtonLeftRight/ButtonLeft";
+import React, { FC } from 'react';
+
+import ButtonLeft from '../ButtonLeftRight/ButtonLeft';
+import ButtonRight from '../ButtonLeftRight/ButtonRight';
+
+import styles from './PaginationComponent.module.css';
 
 interface IProps {
   page: number;
@@ -9,11 +11,7 @@ interface IProps {
   paginationAction: (pageChanged: number) => void;
 }
 
-const PaginationComponent: FC<IProps> = ({
-  page,
-  totalPages,
-  paginationAction,
-}) => {
+const PaginationComponent: FC<IProps> = ({ page, totalPages, paginationAction }) => {
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     switch (true) {
       case +e.currentTarget.value < 1:
@@ -29,11 +27,7 @@ const PaginationComponent: FC<IProps> = ({
 
   return (
     <div className={styles.paginationWrapper}>
-      <button
-        className={styles.prev}
-        onClick={() => paginationAction(page - 1)}
-        disabled={page === 1}
-      >
+      <button className={styles.prev} onClick={() => paginationAction(page - 1)} disabled={page === 1}>
         <ButtonLeft />
       </button>
       <div>
@@ -44,14 +38,10 @@ const PaginationComponent: FC<IProps> = ({
           min={1}
           max={totalPages}
           onChange={onChangeHandler}
-        />{" "}
+        />{' '}
         of <span>{totalPages}</span>
       </div>
-      <button
-        className={styles.next}
-        onClick={() => paginationAction(page + 1)}
-        disabled={page === totalPages}
-      >
+      <button className={styles.next} onClick={() => paginationAction(page + 1)} disabled={page === totalPages}>
         <ButtonRight />
       </button>
     </div>

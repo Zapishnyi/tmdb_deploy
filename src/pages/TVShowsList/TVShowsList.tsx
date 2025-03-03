@@ -1,36 +1,33 @@
-import React, { FC, useEffect, useRef } from "react";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
-import styles from "./TVShowsList.module.css";
-import { debounce } from "lodash";
+import React, { FC, useEffect, useRef } from 'react';
 
-import { setChosenPageTVShow } from "../../redux/Slices/chosenPageSlice";
-import { PaginationTVShowAction } from "../../redux/Slices/paginationTVShowSlice";
-import { TVShowsActions } from "../../redux/Slices/tvShowsSlice";
-import { TVShowFiltering } from "../../helpers/TVShowFilter";
-import TVShowCard from "../../components/TVShowCard/TVShowCard";
-import ProgressBar from "../../components/ProgressBar/ProgressBar";
-import { LanguageEnum } from "../../enums/languageEnum";
-import { CloseSearchPanel } from "../../helpers/CloseSearchPanel";
-import { FadeLoader } from "react-spinners";
+import { debounce } from 'lodash';
+import { FadeLoader } from 'react-spinners';
+
+import ProgressBar from '../../components/ProgressBar/ProgressBar';
+import TVShowCard from '../../components/TVShowCard/TVShowCard';
+import { LanguageEnum } from '../../enums/languageEnum';
+import { CloseSearchPanel } from '../../helpers/CloseSearchPanel';
+import { TVShowFiltering } from '../../helpers/TVShowFilter';
+import { setChosenPageTVShow } from '../../redux/Slices/chosenPageSlice';
+import { PaginationTVShowAction } from '../../redux/Slices/paginationTVShowSlice';
+import { TVShowsActions } from '../../redux/Slices/tvShowsSlice';
+import { useAppDispatch, useAppSelector } from '../../redux/store';
+
+import styles from './TVShowsList.module.css';
 
 const TVShowsList: FC = () => {
   const dispatch = useAppDispatch();
 
-  const { tvShowsDownloaded, tvShowsFiltered, loadingStateTVShows } =
-    useAppSelector((state) => state.TVShows);
-  const { searchNameTVShow, chosenGenresTVShowsId, loadingStateGenres } =
-    useAppSelector((state) => state.Search);
+  const { tvShowsDownloaded, tvShowsFiltered, loadingStateTVShows } = useAppSelector((state) => state.TVShows);
+  const { searchNameTVShow, chosenGenresTVShowsId, loadingStateGenres } = useAppSelector((state) => state.Search);
   const { chosenPageTVShow } = useAppSelector((state) => state.ChosenPage);
-  const {
-    paginationDownloaded,
-    paginationFiltered,
-    observer_position,
-    scroll_position,
-  } = useAppSelector((state) => state.PaginationTVShows);
+  const { paginationDownloaded, paginationFiltered, observer_position, scroll_position } = useAppSelector(
+    (state) => state.PaginationTVShows,
+  );
   const { language } = useAppSelector((state) => state.Language);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const tvShowsListContainerRef = useRef<Element | null>(null);
-  const searchNameRef = useRef<string>("");
+  const searchNameRef = useRef<string>('');
   const chosenGenresIdRef = useRef<number[]>([]);
   const chosenPageRef = useRef<number>(1);
   const languageRef = useRef<LanguageEnum>(LanguageEnum.US);
@@ -38,8 +35,7 @@ const TVShowsList: FC = () => {
   const pageChangeInit = () => {
     if (
       tvShowsListContainerRef.current &&
-      tvShowsListContainerRef.current.scrollTop >
-        tvShowsListContainerRef.current.scrollHeight - 1500 &&
+      tvShowsListContainerRef.current.scrollTop > tvShowsListContainerRef.current.scrollHeight - 1500 &&
       chosenPageTVShow !== paginationFiltered.total_pages
     ) {
       dispatch(setChosenPageTVShow(chosenPageTVShow + 1));
@@ -47,27 +43,15 @@ const TVShowsList: FC = () => {
   };
 
   const observeElements = () => {
-    const observedElements = Array.from(
-      document.getElementsByClassName("observed")
-    );
-    observedElements.forEach((element) =>
-      observerRef.current?.observe(element)
-    );
+    const observedElements = Array.from(document.getElementsByClassName('observed'));
+    observedElements.forEach((element) => observerRef.current?.observe(element));
   };
 
   const handleIntersection = (entries: IntersectionObserverEntry[]) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        dispatch(
-          PaginationTVShowAction.setObserverPosition(
-            Number(entry.target.className.match(/(?<=id_)\d*/))
-          )
-        );
-        dispatch(
-          PaginationTVShowAction.setScrollPosition(
-            tvShowsListContainerRef.current?.scrollTop
-          )
-        );
+        dispatch(PaginationTVShowAction.setObserverPosition(Number(entry.target.className.match(/(?<=id_)\d*/))));
+        dispatch(PaginationTVShowAction.setScrollPosition(tvShowsListContainerRef.current?.scrollTop));
       }
     });
   };
@@ -80,16 +64,11 @@ const TVShowsList: FC = () => {
   useEffect(() => {
     // console.log("use Effect 1 fired: adeventlidtener for scroll")
     if (loadingStateTVShows) return;
-    tvShowsListContainerRef.current = document.getElementsByClassName(
-      styles.movieListContainer
-    )[0];
+    tvShowsListContainerRef.current = document.getElementsByClassName(styles.movieListContainer)[0];
     // observeElements()
-    tvShowsListContainerRef.current?.addEventListener("scroll", scrollHandle);
+    tvShowsListContainerRef.current?.addEventListener('scroll', scrollHandle);
     return () => {
-      tvShowsListContainerRef.current?.removeEventListener(
-        "scroll",
-        scrollHandle
-      );
+      tvShowsListContainerRef.current?.removeEventListener('scroll', scrollHandle);
       observerRef.current?.disconnect();
     };
   }, [tvShowsFiltered]);
@@ -102,18 +81,13 @@ const TVShowsList: FC = () => {
     languageRef.current = language;
 
     const observeOption: IntersectionObserverInit = {
-      root: document.getElementsByClassName(
-        styles.moviesListBase
-      )[0] as HTMLDivElement,
-      rootMargin: "0px",
+      root: document.getElementsByClassName(styles.moviesListBase)[0] as HTMLDivElement,
+      rootMargin: '0px',
       threshold: 0.5,
     };
 
     // Create the IntersectionObserver instance only once
-    observerRef.current = new IntersectionObserver(
-      handleIntersection,
-      observeOption
-    );
+    observerRef.current = new IntersectionObserver(handleIntersection, observeOption);
     pageChangeInit();
 
     // scroll to previous position upon return to the page
@@ -126,15 +100,13 @@ const TVShowsList: FC = () => {
     if (loadingStateTVShows) return; // Prevents reloading if data is already loading
 
     switch (true) {
-      case !tvShowsFiltered.length &&
-        !tvShowsDownloaded.length &&
-        !searchNameTVShow:
+      case !tvShowsFiltered.length && !tvShowsDownloaded.length && !searchNameTVShow:
         {
           dispatch(
             TVShowsActions.searchTVShows({
               searchByTitle: !!searchNameTVShow,
               query: `?page=${chosenPageTVShow}&with_genres=${chosenGenresTVShowsId.join()}`,
-            })
+            }),
           );
         }
         break;
@@ -145,7 +117,7 @@ const TVShowsList: FC = () => {
             TVShowsActions.searchTVShows({
               searchByTitle: !!searchNameTVShow,
               query: `?page=${1}&with_genres=${chosenGenresTVShowsId.join()}&language=${language}`,
-            })
+            }),
           );
         }
         break;
@@ -154,7 +126,7 @@ const TVShowsList: FC = () => {
           TVShowsActions.searchTVShows({
             searchByTitle: !!searchNameTVShow,
             query: `?query=${searchNameTVShow}&page=${chosenPageTVShow}&language=${language}`,
-          })
+          }),
         );
         break;
       case searchNameTVShow && languageRef.current !== language:
@@ -163,13 +135,12 @@ const TVShowsList: FC = () => {
             TVShowsActions.searchTVShows({
               searchByTitle: !!searchNameTVShow,
               query: `?query=${searchNameTVShow}&page=${chosenPageTVShow}&language=${language}`,
-            })
+            }),
           );
         }
         break;
 
-      case JSON.stringify(chosenGenresIdRef.current) !==
-        JSON.stringify(chosenGenresTVShowsId):
+      case JSON.stringify(chosenGenresIdRef.current) !== JSON.stringify(chosenGenresTVShowsId):
         if (searchNameTVShow) {
           const filtered = TVShowFiltering(tvShowsDownloaded);
           dispatch(TVShowsActions.setTVShowsFiltered(filtered.results || []));
@@ -179,7 +150,7 @@ const TVShowsList: FC = () => {
             TVShowsActions.searchTVShows({
               searchByTitle: !!searchNameTVShow,
               query: `?page=${chosenPageTVShow}&with_genres=${chosenGenresTVShowsId.join()}&language=${language}`,
-            })
+            }),
           );
         }
         break;
@@ -190,7 +161,7 @@ const TVShowsList: FC = () => {
             TVShowsActions.endlessPaginationAction({
               searchByTitle: !!searchNameTVShow,
               query: `?page=${chosenPageTVShow}&with_genres=${chosenGenresTVShowsId.join()}&language=${language}`,
-            })
+            }),
           );
         }
         break;
@@ -218,9 +189,7 @@ const TVShowsList: FC = () => {
       // console.log("2: without title")
       // console.log('movies downloaded', tvShowsDownloaded)
       dispatch(TVShowsActions.setTVShowsFiltered(tvShowsDownloaded));
-      dispatch(
-        PaginationTVShowAction.setPaginationFiltered(paginationDownloaded)
-      );
+      dispatch(PaginationTVShowAction.setPaginationFiltered(paginationDownloaded));
     }
   }, [tvShowsDownloaded]);
 
@@ -229,9 +198,7 @@ const TVShowsList: FC = () => {
 
   return (
     <div className={styles.moviesListBase}>
-      {paginationFiltered.total_results > 1 && (
-        <ProgressBar observerPosition={observer_position} />
-      )}
+      {paginationFiltered.total_results > 1 && <ProgressBar observerPosition={observer_position} />}
       {loadingStateTVShows || loadingStateGenres ? (
         <div className={styles.spinner}>
           <FadeLoader color="#9d9deb" />
@@ -239,12 +206,10 @@ const TVShowsList: FC = () => {
       ) : (
         <div className={styles.movieListContainer} onClick={CloseSearchPanel}>
           {tvShowsFiltered.length ? (
-            tvShowsFiltered.map((tvShow, index) => (
-              <TVShowCard key={index} tvShow={tvShow} />
-            ))
+            tvShowsFiltered.map((tvShow, index) => <TVShowCard key={index} tvShow={tvShow} />)
           ) : (
             <div className={styles.movieNotFoundWarning}>
-              <h3>Your search request doesn't match any movie in TMDB.</h3>
+              <h3>Your search request does not match any movie in TMDB.</h3>
             </div>
           )}
         </div>

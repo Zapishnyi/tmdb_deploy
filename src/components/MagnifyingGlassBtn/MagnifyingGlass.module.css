@@ -1,14 +1,12 @@
 .svg {
-    width: 20px;
-    fill: var(--contrast_element_color);
+  width: 20px;
+  fill: var(--contrast_element_color);
 
-    * {
-        transition: none;
-    }
+  * {
+    transition: none;
+  }
 
-    .path {
-        fill: var(--buttons_backgrond_color);
-    }
-
+  .path {
+    fill: var(--buttons_backgrond_color);
+  }
 }
-

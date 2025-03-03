@@ -1,17 +1,16 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
-import { FlatCompat } from "@eslint/eslintrc";
-import js from "@eslint/js";
-import typescriptEslint from "@typescript-eslint/eslint-plugin";
-import tsParser from "@typescript-eslint/parser";
-import _import from "eslint-plugin-import";
-import react from "eslint-plugin-react";
-import reactHooks from "eslint-plugin-react-hooks";
-import globals from "globals";
-import prettier from "eslint-plugin-prettier";
-import eslintConfigPrettier from "eslint-config-prettier";
+import { fixupConfigRules, fixupPluginRules } from '@eslint/compat';
+import { FlatCompat } from '@eslint/eslintrc';
+import js from '@eslint/js';
+import typescriptEslint from '@typescript-eslint/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
+import _import from 'eslint-plugin-import';
+import prettier from 'eslint-plugin-prettier';
+import react from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
+import globals from 'globals';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,21 +23,20 @@ const compat = new FlatCompat({
 export default [
   ...fixupConfigRules(
     compat.extends(
-      "eslint:recommended",
-      "plugin:react/recommended",
-      "plugin:react-hooks/recommended",
-      "plugin:@typescript-eslint/recommended",
-      eslintConfigPrettier
-    )
+      'eslint:recommended',
+      'plugin:react/recommended',
+      'plugin:react-hooks/recommended',
+      'plugin:@typescript-eslint/recommended',
+      'plugin:prettier/recommended', // This enables eslint-plugin-prettier and eslint-config-prettier
+    ),
   ),
   {
     plugins: {
       import: fixupPluginRules(_import),
       react: fixupPluginRules(react),
-      "react-hooks": fixupPluginRules(reactHooks),
-      "@typescript-eslint": fixupPluginRules(typescriptEslint),
-      plugin: prettier / recommended, // Add Prettier recommended rules
-      // eslintConfigPrettier // Disable ESLint rules that conflict with Prettier
+      'react-hooks': fixupPluginRules(reactHooks),
+      '@typescript-eslint': fixupPluginRules(typescriptEslint),
+      prettier: fixupPluginRules(prettier), // Add Prettier plugin here
     },
 
     languageOptions: {
@@ -47,11 +45,11 @@ export default [
       },
 
       parser: tsParser,
-      ecmaVersion: "latest",
-      sourceType: "module",
+      ecmaVersion: 'latest',
+      sourceType: 'module',
 
       parserOptions: {
-        project: "./tsconfig.json",
+        project: './tsconfig.json',
 
         ecmaFeatures: {
           jsx: true,
@@ -60,34 +58,28 @@ export default [
     },
 
     rules: {
-      "react/prop-types": "off",
-      "react/display-name": "off",
-      "react/react-in-jsx-scope": "off",
-
-      "import/order": [
-        "error",
+      'react/prop-types': 'off',
+      'react/display-name': 'off',
+      'react/react-in-jsx-scope': 'off',
+      'prettier/prettier': 'error',
+      'linebreak-style': ['error', 'unix'], // Enforce LF line endings (Unix style)
+      'import/order': [
+        'error',
         {
-          groups: [
-            "builtin",
-            "external",
-            "internal",
-            "parent",
-            "sibling",
-            "index",
-          ],
+          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
           pathGroups: [
             {
-              pattern: "react",
-              group: "external",
-              position: "before",
+              pattern: 'react',
+              group: 'external',
+              position: 'before',
             },
           ],
 
-          pathGroupsExcludedImportTypes: ["react"],
-          "newlines-between": "always",
+          pathGroupsExcludedImportTypes: ['react'],
+          'newlines-between': 'always',
 
           alphabetize: {
-            order: "asc",
+            order: 'asc',
             caseInsensitive: true,
           },
         },

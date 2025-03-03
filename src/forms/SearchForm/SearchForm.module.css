@@ -1,153 +1,142 @@
-
 .searchForm {
-    backdrop-filter: blur(3px);
-    background: rgba(134, 134, 134, 0.12);
+  backdrop-filter: blur(3px);
+  background: rgba(134, 134, 134, 0.12);
+  display: flex;
+  flex-direction: column;
+  width: 80vw;
+  /*min-width: 80vw;*/
+  max-width: 800px;
+  /*box-shadow: 0 0 5px rgba(255, 255, 255, 0.26);*/
+  height: fit-content;
+  align-items: center;
+  /*@media (width < 800px ) {*/
+  /*    width: 95%;*/
+  /*    margin: 0 auto;*/
+  /*    padding-top: 20px;*/
+  /*}*/
+
+  .searchField {
     display: flex;
     flex-direction: column;
-    width: 80vw;
-    /*min-width: 80vw;*/
-    max-width: 800px;
-    /*box-shadow: 0 0 5px rgba(255, 255, 255, 0.26);*/
-    height: fit-content;
+    justify-content: center;
     align-items: center;
-    /*@media (width < 800px ) {*/
-    /*    width: 95%;*/
-    /*    margin: 0 auto;*/
-    /*    padding-top: 20px;*/
-    /*}*/
+    width: 100%;
+    height: 100%;
+    padding: 5px 0;
 
-    .searchField {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        height: 100%;
-        padding: 5px 0;
-
-
-        @media (width < 800px ) {
-            justify-content: flex-start;
-        }
-
-        .chosenGenres {
-            @media (width < 800px ) {
-                display: none;
-            }
-        }
-
-        .searchInputButton {
-            border: 1px solid #c7c7c7;
-            border-radius: 25px;
-            width: 100%;
-            height: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: var(--background_color_lighter);
-            overflow: hidden;
-
-            input {
-                width: 80%;
-                font-size: 20px;
-                outline: none;
-                border: none;
-                background: transparent;
-
-            }
-
-            input:focus {
-                outline: none;
-            }
-
-            .searchButton {
-
-                display: flex;
-                justify-content: flex-end;
-                cursor: pointer;
-                background: none;
-                width: 10%;
-                border: none;
-            }
-
-            svg {
-                transform: scale(1);
-                /*transition: 0.3s;*/
-            }
-
-            .searchButton:hover svg {
-                transform: scale(1.2);
-
-            }
-        }
-
-
+    @media (width < 800px) {
+      justify-content: flex-start;
     }
 
-    .searchField:hover + .genresToChose {
-        opacity: 1;
-        display: flex;
+    .chosenGenres {
+      @media (width < 800px) {
+        display: none;
+      }
     }
 
+    .searchInputButton {
+      border: 1px solid #c7c7c7;
+      border-radius: 25px;
+      width: 100%;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--background_color_lighter);
+      overflow: hidden;
 
-    .genresToChose {
-        padding: 10px;
+      input {
+        width: 80%;
+        font-size: 20px;
+        outline: none;
+        border: none;
+        background: transparent;
+      }
+
+      input:focus {
+        outline: none;
+      }
+
+      .searchButton {
         display: flex;
-        opacity: 1;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        /*position: absolute;*/
-        /*top: 80px;*/
+        justify-content: flex-end;
+        cursor: pointer;
+        background: none;
+        width: 10%;
+        border: none;
+      }
 
-        z-index: 5;
-        animation: genresPopUp 0.3s forwards ease-in;
+      svg {
+        transform: scale(1);
+        /*transition: 0.3s;*/
+      }
 
-        .genreInput {
-        }
+      .searchButton:hover svg {
+        transform: scale(1.2);
+      }
+    }
+  }
 
-        @media (width < 800px ) {
-            opacity: 1;
-            display: flex;
-        }
+  .searchField:hover + .genresToChose {
+    opacity: 1;
+    display: flex;
+  }
 
-        label {
-            cursor: pointer;
-            line-height: 15px;
-            border: 1px solid grey;
-            padding: 3px;
-            border-radius: 5px;
-            margin: 3px;
-            background: white;
-            color: black;
-            box-shadow: 0 0 5px #c7c7c7;
-            @media (width < 800px ) {
-                padding: 5px;
-                margin: 10px;
-            }
+  .genresToChose {
+    padding: 10px;
+    display: flex;
+    opacity: 1;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    /*position: absolute;*/
+    /*top: 80px;*/
 
-            input {
-                display: none;
-            }
-        }
+    z-index: 5;
+    animation: genresPopUp 0.3s forwards ease-in;
 
-        label:has(input:checked) {
-            color: white;
-            background: black;
-        }
-
-        .none {
-
-        }
+    .genreInput {
     }
 
+    @media (width < 800px) {
+      opacity: 1;
+      display: flex;
+    }
+
+    label {
+      cursor: pointer;
+      line-height: 15px;
+      border: 1px solid grey;
+      padding: 3px;
+      border-radius: 5px;
+      margin: 3px;
+      background: white;
+      color: black;
+      box-shadow: 0 0 5px #c7c7c7;
+      @media (width < 800px) {
+        padding: 5px;
+        margin: 10px;
+      }
+
+      input {
+        display: none;
+      }
+    }
+
+    label:has(input:checked) {
+      color: white;
+      background: black;
+    }
+
+    .none {
+    }
+  }
 }
 
 @keyframes genresPopUp {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }

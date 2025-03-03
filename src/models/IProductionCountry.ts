@@ -1,4 +1,4 @@
 export default interface IProductionCountry {
-    iso_3166_1: string,
-    name: string
+  iso_3166_1: string;
+  name: string;
 }

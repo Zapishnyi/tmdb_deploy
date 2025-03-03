@@ -1,5 +1,5 @@
-import {LanguageEnum} from "../enums/languageEnum";
+import { LanguageEnum } from '../enums/languageEnum';
 
 export interface IAppLanguage {
-    language: LanguageEnum
+  language: LanguageEnum;
 }

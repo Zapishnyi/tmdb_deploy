@@ -1,5 +1,6 @@
-import { SVGProps } from "react";
-import styles from "./SettingsSVG.module.css";
+import { SVGProps } from 'react';
+
+import styles from './SettingsSVG.module.css';
 
 export function SettingsSVG(props: SVGProps<SVGSVGElement>) {
   return (

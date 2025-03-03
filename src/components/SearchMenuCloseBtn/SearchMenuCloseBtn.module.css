@@ -1,11 +1,11 @@
 .wrapper {
-    cursor: pointer;
+  cursor: pointer;
 
-    path {
-        stroke: var(--contrast_element_color);
-    }
+  path {
+    stroke: var(--contrast_element_color);
+  }
 
-    circle {
-        stroke: var(--contrast_element_color);
-    }
+  circle {
+    stroke: var(--contrast_element_color);
+  }
 }

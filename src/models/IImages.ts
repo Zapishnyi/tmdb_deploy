@@ -1,5 +1,5 @@
-import IImage from "./IImage";
+import IImage from './IImage';
 
 export default interface IImages {
-    backdrops: IImage[]
+  backdrops: IImage[];
 }

@@ -1,6 +1,6 @@
-import IActor from "./IActor";
+import IActor from './IActor';
 
 export interface ICredits {
-    "id": 693134,
-    "cast": IActor[]
+  id: number;
+  cast: IActor[];
 }

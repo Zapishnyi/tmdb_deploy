@@ -1,16 +1,16 @@
-import { ChangeEvent, FC, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router-dom";
-import MagnifyingGlassBtn from "../../components/MagnifyingGlassBtn/MagnifyingGlassBtn";
-import { CloseSearchPanel } from "../../helpers/CloseSearchPanel";
-import { SearchFade } from "../../helpers/SearchFade";
-import {
-  setChosenPageMovie,
-  setChosenPageTVShow,
-} from "../../redux/Slices/chosenPageSlice";
-import { SearchActions } from "../../redux/Slices/searchSlice";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
-import styles from "./SearchForm.module.css";
+import { ChangeEvent, FC, useEffect } from 'react';
+
+import { useForm } from 'react-hook-form';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+import MagnifyingGlassBtn from '../../components/MagnifyingGlassBtn/MagnifyingGlassBtn';
+import { CloseSearchPanel } from '../../helpers/CloseSearchPanel';
+import { SearchFade } from '../../helpers/SearchFade';
+import { setChosenPageMovie, setChosenPageTVShow } from '../../redux/Slices/chosenPageSlice';
+import { SearchActions } from '../../redux/Slices/searchSlice';
+import { useAppDispatch, useAppSelector } from '../../redux/store';
+
+import styles from './SearchForm.module.css';
 
 type FormType = {
   [key: string]: boolean | string;
@@ -29,23 +29,19 @@ const SearchForm: FC = () => {
     searchNameMovie,
     searchNameTVShow,
   } = useAppSelector((state) => state.Search);
-  const isMovie = ["/movies", "/movie_info"].includes(location.pathname);
+  const isMovie = ['/movies', '/movie_info'].includes(location.pathname);
   const genresBoolean = (isMovie ? genresMovies : genresTVShows)
     // .filter((e) => isMovie ? chosenGenresMoviesId.includes(e.id) : chosenGenresTVShowsId.includes(e.id))
     .map((e) => ({
-      [e.name]: isMovie
-        ? chosenGenresMoviesId.includes(e.id)
-        : chosenGenresTVShowsId.includes(e.id),
+      [e.name]: isMovie ? chosenGenresMoviesId.includes(e.id) : chosenGenresTVShowsId.includes(e.id),
     }));
 
   const { register, handleSubmit, reset } = useForm<FormType>({
     defaultValues: Object.assign(
       {
-        [isMovie ? "searchNameMovie" : "searchNameTVShow"]: isMovie
-          ? searchNameMovie
-          : searchNameTVShow,
+        [isMovie ? 'searchNameMovie' : 'searchNameTVShow']: isMovie ? searchNameMovie : searchNameTVShow,
       },
-      ...genresBoolean
+      ...genresBoolean,
     ),
   });
 
@@ -53,12 +49,10 @@ const SearchForm: FC = () => {
     reset(
       Object.assign(
         {
-          [isMovie ? "searchNameMovie" : "searchNameTVShow"]: isMovie
-            ? searchNameMovie
-            : searchNameTVShow,
+          [isMovie ? 'searchNameMovie' : 'searchNameTVShow']: isMovie ? searchNameMovie : searchNameTVShow,
         },
-        ...genresBoolean
-      )
+        ...genresBoolean,
+      ),
     );
   }, [isMovie]);
 
@@ -68,44 +62,38 @@ const SearchForm: FC = () => {
     dispatch(
       isMovie
         ? SearchActions.setMovieSearchName(formData.searchNameMovie)
-        : SearchActions.setTVShowSearchName(formData.searchNameTVShow)
+        : SearchActions.setTVShowSearchName(formData.searchNameTVShow),
     );
     SearchFade();
     CloseSearchPanel();
-    navigate(isMovie ? "/movies" : "/tv_shows");
+    navigate(isMovie ? '/movies' : '/tv_shows');
   };
 
   const genreChoiceNone = () => {
     dispatch(isMovie ? setChosenPageMovie(1) : setChosenPageTVShow(1));
-    dispatch(
-      isMovie
-        ? SearchActions.setChosenGenresMoviesId([])
-        : SearchActions.setChosenGenresTVShowsId([])
-    );
+    dispatch(isMovie ? SearchActions.setChosenGenresMoviesId([]) : SearchActions.setChosenGenresTVShowsId([]));
     SearchFade();
     CloseSearchPanel();
-    for (let item of Array.from(
-      document.getElementsByClassName(styles.genreInput)
-    ) as HTMLInputElement[]) {
+    for (const item of Array.from(document.getElementsByClassName(styles.genreInput)) as HTMLInputElement[]) {
       item.checked = false;
     }
     switch (true) {
-      case location.pathname === "/tv_show_info":
-        navigate("/tv_shows");
+      case location.pathname === '/tv_show_info':
+        navigate('/tv_shows');
         break;
-      case location.pathname === "/movie_info":
-        navigate("movies");
+      case location.pathname === '/movie_info':
+        navigate('movies');
         break;
     }
   };
 
   const genreChoiceHandler = (element: ChangeEvent<HTMLInputElement>) => {
     switch (true) {
-      case location.pathname === "/tv_show_info":
-        navigate("/tv_shows");
+      case location.pathname === '/tv_show_info':
+        navigate('/tv_shows');
         break;
-      case location.pathname === "/movie_info":
-        navigate("movies");
+      case location.pathname === '/movie_info':
+        navigate('movies');
         break;
     }
 
@@ -113,22 +101,20 @@ const SearchForm: FC = () => {
     const chosenGenreId = (isMovie ? genresMovies : genresTVShows)
       .filter((e) => e.name === element.currentTarget.name)
       .map((e) => e.id)[0];
-    const chosenGenresIdUpdated = [
-      ...(isMovie ? chosenGenresMoviesId : chosenGenresTVShowsId),
-    ];
+    const chosenGenresIdUpdated = [...(isMovie ? chosenGenresMoviesId : chosenGenresTVShowsId)];
     chosenGenresIdUpdated.push(chosenGenreId);
     dispatch(
       isMovie
         ? SearchActions.setChosenGenresMoviesId(
             chosenGenresMoviesId.includes(chosenGenreId)
               ? chosenGenresMoviesId.filter((e) => e !== chosenGenreId)
-              : chosenGenresIdUpdated
+              : chosenGenresIdUpdated,
           )
         : SearchActions.setChosenGenresTVShowsId(
             chosenGenresTVShowsId.includes(chosenGenreId)
               ? chosenGenresTVShowsId.filter((e) => e !== chosenGenreId)
-              : chosenGenresIdUpdated
-          )
+              : chosenGenresIdUpdated,
+          ),
     );
   };
   return (
@@ -138,10 +124,7 @@ const SearchForm: FC = () => {
         {/*    <GenresBadgeSet genres_ids={chosenGenresId}/>*/}
         {/*</div>*/}
         <div className={styles.searchInputButton}>
-          <input
-            type="text"
-            {...register(`${isMovie ? "searchNameMovie" : "searchNameTVShow"}`)}
-          />
+          <input type="text" {...register(`${isMovie ? 'searchNameMovie' : 'searchNameTVShow'}`)} />
           <button className={styles.searchButton}>
             <MagnifyingGlassBtn />
           </button>
@@ -150,13 +133,9 @@ const SearchForm: FC = () => {
       <div className={styles.genresToChose}>
         <label>
           <input
-            type={"checkbox"}
-            checked={
-              isMovie
-                ? !chosenGenresMoviesId.length
-                : !chosenGenresTVShowsId.length
-            }
-            className={[styles.none, "genresNotChosen"].join(" ")}
+            type={'checkbox'}
+            checked={isMovie ? !chosenGenresMoviesId.length : !chosenGenresTVShowsId.length}
+            className={[styles.none, 'genresNotChosen'].join(' ')}
             onChange={genreChoiceNone}
           />
           None
@@ -165,7 +144,7 @@ const SearchForm: FC = () => {
           <label key={genre.id}>
             <input
               className={styles.genreInput}
-              type={"checkbox"}
+              type={'checkbox'}
               {...register(`${genre.name}`)}
               onChange={genreChoiceHandler}
             />
