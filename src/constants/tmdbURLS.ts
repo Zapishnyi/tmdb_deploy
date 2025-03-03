@@ -6,7 +6,9 @@ export const url = {
         genres: "/genre/movie/list",
         allByGenres: (query: string): string => `/discover/movie${query}`,
         allByTitle: (query: string): string => `/search/movie${query}`,
-        oneById: (id: number): string => `/movie/${id}&language=ru`,
+        oneById: (id: number, language:string): string => `/movie/${id}?language=${language}`,
+        credits: (id: number, language:string): string => `/movie/${id}/credits?language=${language}`,
+        images: (id: number, language:string): string => `/movie/${id}/images?language=${language}`,
     },
     tvShow: {
         genres: "/genre/tv/list",

@@ -1,9 +1,10 @@
-import React, { FC } from "react";
-import "@theme-toggles/react/css/Classic.css";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
+// import "@theme-toggles/react/css/Classic.css";
+import { FC } from "react";
+
 import { setTheme } from "../../redux/Slices/themeSlice";
-import { DarkModeSwitch } from "react-toggle-dark-mode";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 import styles from "./ColorThemeToggle.module.css";
+import { DarkModeSwitch } from "react-toggle-dark-mode";
 
 const ColorThemeToggle: FC = () => {
   const { lightThemeOn } = useAppSelector((state) => state.Theme);

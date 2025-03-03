@@ -33,7 +33,7 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            animation: 1s forwards cubic-bezier(1, -0.06, 1, .19);
+            animation: 1s delay forwards cubic-bezier(1, -0.06, 1, .19);
         }
     }
 }

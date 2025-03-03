@@ -13,6 +13,7 @@ export const languageSlice = createSlice({
     reducers: {
         setLanguage: (state, action: PayloadAction<LanguageEnum>) => {
             state.language = action.payload;
+             localStorage.setItem("language", JSON.stringify(action.payload));
         },
     },
 });

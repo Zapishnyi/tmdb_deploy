@@ -1,8 +1,8 @@
-import React, { ChangeEvent, createRef, FC } from "react";
+import React, { FC } from "react";
 import { LanguageEnum } from "../../enums/languageEnum";
-import styles from "./LanguageSelector.module.css";
+import { setLanguage } from "../../redux/Slices/languageSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
-import { setLanguage } from "../../redux/Slices/lenguageSlice";
+import styles from "./LanguageSelector.module.css";
 
 const LanguageSelector: FC = () => {
   const { language } = useAppSelector((state) => state.Language);
@@ -13,7 +13,6 @@ const LanguageSelector: FC = () => {
         Object.values(LanguageEnum).filter((item) => item !== language)[0]
       )
     );
-    localStorage.setItem("language", JSON.stringify(language));
   };
   return (
     <div className={styles.language} onClick={handleChange}>

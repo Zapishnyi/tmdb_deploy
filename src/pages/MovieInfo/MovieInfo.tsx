@@ -1,22 +1,26 @@
-import React, { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import StarRatings from "react-star-ratings";
+import BackButton from "../../components/BackButton/BackButton";
+import GenresBadgeSet from "../../components/GenresBadgeSet/GenresBadgeSet";
+import ImagePreview from "../../components/MovieImagePreview/ImagePreview";
+import { errorImage } from "../../constants/errorImagePath";
+import { CloseSearchPanel } from "../../helpers/CloseSearchPanel";
+import { getLanguageName } from "../../helpers/GetLanguageName";
+import IMovieDetails from "../../models/IMovieDetails";
 import { useAppSelector } from "../../redux/store";
 import styles from "./MovieInfo.module.css";
-import ImagePreview from "../../components/MovieImagePreview/ImagePreview";
-import StarRatings from "react-star-ratings";
-import { errorImage } from "../../constants/errorImagePath";
-import GenresBadgeSet from "../../components/GenresBadgeSet/GenresBadgeSet";
-import BackButton from "../../components/BackButton/BackButton";
-import { CloseSearchPanel } from "../../helpers/CloseSearchPanel";
 
 const MovieInfo: FC = () => {
   const navigate = useNavigate();
 
   const { chosenMovie } = useAppSelector((state) => state.Movies);
-
-  // dispatch(setScrollPosition(chosenMovie?.id || scroll_position))
-  const getLanguage = (code: string) =>
-    new Intl.DisplayNames(["en"], { type: "language" }).of(code);
+  const [movieDetails, setMovieDetails] = useState<IMovieDetails | null>(null);
+  const [movieImages, setMovieImages] = useState<IMovieDetails | null>(null);
+  useEffect(() => {
+    try {
+    } catch (e) {}
+  }, []);
 
   useEffect(() => {
     if (!chosenMovie) {
@@ -39,6 +43,9 @@ const MovieInfo: FC = () => {
                   poster_path={chosenMovie.backdrop_path}
                   title={chosenMovie.original_title}
                   error_image_path={errorImage.movieImage}
+                  width_desktop={"45vw"}
+                  width_mobile={"95vw"}
+                  aspect_ratio={1.78}
                 />
               </div>
               <div className={styles.info}>
@@ -53,7 +60,9 @@ const MovieInfo: FC = () => {
                   starEmptyColor="#b1b1b1"
                 />
                 <p>Release date: {chosenMovie.release_date}</p>
-                <p>Language: {getLanguage(chosenMovie.original_language)}</p>
+                <p>
+                  Language: {getLanguageName(chosenMovie.original_language)}
+                </p>
                 {chosenMovie.adult && (
                   <p className={styles.adultContentWarning}>
                     Parental advisory: explicit content
@@ -68,12 +77,6 @@ const MovieInfo: FC = () => {
           </div>
         </div>
       )}
-
-      {/*<PaginationComponent*/}
-      {/*  page={page}*/}
-      {/*  totalPages={totalPages}*/}
-      {/*  paginationAction={paginationAction}*/}
-      {/*/>*/}
     </div>
   );
 };

@@ -2,7 +2,7 @@ import React, { FC, useEffect, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import styles from "./TVShowsList.module.css";
 import { debounce } from "lodash";
-import { ThreeCircles } from "react-loader-spinner";
+
 import { setChosenPageTVShow } from "../../redux/Slices/chosenPageSlice";
 import { PaginationTVShowAction } from "../../redux/Slices/paginationTVShowSlice";
 import { TVShowsActions } from "../../redux/Slices/tvShowsSlice";
@@ -11,6 +11,7 @@ import TVShowCard from "../../components/TVShowCard/TVShowCard";
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
 import { LanguageEnum } from "../../enums/languageEnum";
 import { CloseSearchPanel } from "../../helpers/CloseSearchPanel";
+import { FadeLoader } from "react-spinners";
 
 const TVShowsList: FC = () => {
   const dispatch = useAppDispatch();
@@ -169,7 +170,7 @@ const TVShowsList: FC = () => {
 
       case JSON.stringify(chosenGenresIdRef.current) !==
         JSON.stringify(chosenGenresTVShowsId):
-        if (!!searchNameTVShow) {
+        if (searchNameTVShow) {
           const filtered = TVShowFiltering(tvShowsDownloaded);
           dispatch(TVShowsActions.setTVShowsFiltered(filtered.results || []));
           dispatch(PaginationTVShowAction.setPaginationFiltered(filtered));
@@ -184,7 +185,7 @@ const TVShowsList: FC = () => {
         break;
       case chosenPageRef.current !== chosenPageTVShow: {
         // console.log("5: page changed for endless pagination", chosenPageRef.current, chosenPageTVShow)
-        if (!!!searchNameTVShow) {
+        if (!searchNameTVShow) {
           dispatch(
             TVShowsActions.endlessPaginationAction({
               searchByTitle: !!searchNameTVShow,
@@ -205,7 +206,7 @@ const TVShowsList: FC = () => {
   useEffect(() => {
     // console.log("use Effect 4 fired: dovnloaded movie changed")
     if (loadingStateTVShows) return;
-    if (!!searchNameTVShow) {
+    if (searchNameTVShow) {
       // console.log("1: with title")
       const tvShowsFilter = TVShowFiltering(tvShowsDownloaded);
 
@@ -233,12 +234,7 @@ const TVShowsList: FC = () => {
       )}
       {loadingStateTVShows || loadingStateGenres ? (
         <div className={styles.spinner}>
-          <ThreeCircles
-            height="80"
-            width="80"
-            color="#9d9deb"
-            ariaLabel="loading"
-          />
+          <FadeLoader color="#9d9deb" />
         </div>
       ) : (
         <div className={styles.movieListContainer} onClick={CloseSearchPanel}>
