@@ -3,7 +3,7 @@ import axios from 'axios';
 import { url, urlBase } from '../constants/tmdbURLS';
 import { ICredits } from '../models/ICredits';
 import IGenres from '../models/IGenres';
-import IImages from '../models/IImages';
+import IImagesRes from '../models/IImagesRes';
 import IMovieDetails from '../models/IMovieDetails';
 import IMoviesPaginated from '../models/IMoviesPaginated';
 import ITVShowDetails from '../models/ITVShowDetails';
@@ -25,7 +25,7 @@ interface ITmdbDataApiService {
     byTitle: (query: string) => Promise<IMoviesPaginated>;
     byId: (id: number, language: string) => Promise<IMovieDetails>;
     credits: (id: number, language: string) => Promise<ICredits>;
-    images: (id: number, language: string) => Promise<IImages>;
+    images: (id: number, language: string) => Promise<IImagesRes>;
   };
   tvShow: {
     genres: Promise<IGenres>;

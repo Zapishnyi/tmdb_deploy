@@ -1,6 +1,5 @@
 import IImage from './IImage';
 
-export default interface IImages {
-  id: number;
+export default interface IImagesRes {
   backdrops: IImage[];
 }

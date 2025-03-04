@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { chosenPageSlice } from './Slices/chosenPageSlice';
 import { languageSlice } from './Slices/languageSlice';
+import { movieDetailsSlice } from './Slices/movieDetailsSlice';
 import { moviesSlice } from './Slices/moviesSlice';
 import { paginationMovieSlice } from './Slices/paginationMovieSlice';
 import { paginationTVShowSlice } from './Slices/paginationTVShowSlice';
@@ -13,6 +14,7 @@ import { tvShowsSlice } from './Slices/tvShowsSlice';
 export const store = configureStore({
   reducer: {
     Movies: moviesSlice.reducer,
+    MovieDetails: movieDetailsSlice.reducer,
     TVShows: tvShowsSlice.reducer,
     Search: searchSlice.reducer,
     PaginationMovies: paginationMovieSlice.reducer,
