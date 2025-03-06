@@ -4,6 +4,24 @@
     align-items: center;
     flex-direction: column;
     width: 300px;
+    position: relative;
+
+    .spinner {
+        width: 300px;
+        height: 225px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    iframe {
+        width: 300px;
+        height: 225px;
+    }
+
+    img {
+        cursor: pointer;
+    }
 
     p {
         text-wrap: balance;

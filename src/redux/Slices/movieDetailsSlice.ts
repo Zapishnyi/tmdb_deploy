@@ -52,10 +52,14 @@ const getCredits = createAsyncThunk('movieDetails/getCredits', async (movie_id: 
 });
 
 const getImages = createAsyncThunk('movieDetails/getImages', async (movie_id: number, thunkAPI) => {
+  const state = thunkAPI.getState() as RootState;
   try {
-    const images = await get.movie.images(movie_id);
+    const images = await get.movie.images(movie_id, state.Language.language);
 
-    return thunkAPI.fulfillWithValue(images);
+    return thunkAPI.fulfillWithValue({
+      ...images,
+      posters: images.posters.filter((poster) => state.Language.language.includes(poster?.iso_639_1 || '')),
+    });
   } catch (e) {
     const error = e as AxiosError<IErrorResponse>;
     return thunkAPI.rejectWithValue(error.response?.data.status_message);
@@ -65,8 +69,9 @@ const getImages = createAsyncThunk('movieDetails/getImages', async (movie_id: nu
 });
 
 const getVideos = createAsyncThunk('movieDetails/getVideos', async (movie_id: number, thunkAPI) => {
+  const state = thunkAPI.getState() as RootState;
   try {
-    const videos = await get.movie.videos(movie_id);
+    const videos = await get.movie.videos(movie_id, state.Language.language);
     console.log('videos', videos);
     return thunkAPI.fulfillWithValue(videos);
   } catch (e) {
@@ -81,14 +86,11 @@ export const movieDetailsSlice = createSlice({
   name: 'movieDetails',
   initialState,
   reducers: {
-    clearFilms: (state) => {
+    clearFilmsDetails: (state) => {
       state.movies = [];
-    },
-    clearCredits: (state) => {
       state.credits = [];
-    },
-    clearImages: (state) => {
       state.images = [];
+      state.videos = [];
     },
     setLoadingState: (state, action) => {
       state.loadingStateDetails = action.payload;
@@ -108,10 +110,10 @@ export const movieDetailsSlice = createSlice({
       .addCase(getVideos.fulfilled, (state, action) => {
         state.videos = [...state.videos, action.payload];
       })
-      .addMatcher(isRejected(getMovieDetails, getCredits, getImages), (state, action) => {
+      .addMatcher(isRejected(getMovieDetails, getCredits, getImages, getVideos), (state, action) => {
         console.error('Movie details receive sequence failed with error:', action.payload);
       })
-      .addMatcher(isPending(getMovieDetails, getCredits, getImages), (state) => {
+      .addMatcher(isPending(getMovieDetails, getCredits, getImages, getVideos), (state) => {
         state.loadingStateDetails = true;
       });
   },

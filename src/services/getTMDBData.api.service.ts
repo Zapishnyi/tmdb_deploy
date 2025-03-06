@@ -21,16 +21,16 @@ const axiosInstance = axios.create({
 
 interface ITmdbDataApiService {
   movie: {
-    genres: Promise<IGenres>;
+    genres: (language: string) => Promise<IGenres>;
     byGenres: (query: string) => Promise<IMoviesPaginated>;
     byTitle: (query: string) => Promise<IMoviesPaginated>;
     byId: (id: number, language: string) => Promise<IMovieDetails>;
     credits: (id: number, language: string) => Promise<ICredits>;
-    images: (id: number) => Promise<IImages>;
-    videos: (id: number) => Promise<IVideos>;
+    images: (id: number, language: string) => Promise<IImages>;
+    videos: (id: number, language: string) => Promise<IVideos>;
   };
   tvShow: {
-    genres: Promise<IGenres>;
+    genres: (language: string) => Promise<IGenres>;
     byGenres: (query: string) => Promise<ITVShowsPaginated>;
     byTitle: (query: string) => Promise<ITVShowsPaginated>;
     byId: (id: number, query: string) => Promise<ITVShowDetails>;
@@ -40,16 +40,16 @@ interface ITmdbDataApiService {
 
 export const get: ITmdbDataApiService = {
   movie: {
-    genres: axiosInstance.get(url.movie.genres).then((response) => response.data),
+    genres: (language) => axiosInstance.get(url.movie.genres(language)).then((response) => response.data),
     byGenres: (query) => axiosInstance.get(url.movie.allByGenres(query)).then((value) => value.data),
     byTitle: (query) => axiosInstance.get(url.movie.allByTitle(query)).then((value) => value.data),
     byId: (id, language) => axiosInstance.get(url.movie.oneById(id, language)).then((value) => value.data),
     credits: (id, language) => axiosInstance.get(url.movie.credits(id, language)).then((value) => value.data),
     images: (id) => axiosInstance.get(url.movie.images(id)).then((value) => value.data),
-    videos: (id) => axiosInstance.get(url.movie.videos(id)).then((value) => value.data),
+    videos: (id, language) => axiosInstance.get(url.movie.videos(id, language)).then((value) => value.data),
   },
   tvShow: {
-    genres: axiosInstance.get(url.tvShow.genres).then((response) => response.data),
+    genres: (language) => axiosInstance.get(url.tvShow.genres(language)).then((response) => response.data),
     byGenres: (query) => axiosInstance.get(url.tvShow.allByGenres(query)).then((value) => value.data),
 
     byTitle: (query) => axiosInstance.get(url.tvShow.allByTitle(query)).then((value) => value.data),

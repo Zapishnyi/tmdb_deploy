@@ -5,7 +5,7 @@ import { FadeLoader } from 'react-spinners';
 
 import MovieCard from '../../components/MovieCard/MovieCard';
 import ProgressBar from '../../components/ProgressBar/ProgressBar';
-import { CloseSearchPanel } from '../../helpers/CloseSearchPanel';
+import { closeSearchPanel } from '../../helpers/CloseSearchPanel';
 import { setChosenPageMovie } from '../../redux/Slices/chosenPageSlice';
 import { MoviesActions } from '../../redux/Slices/moviesSlice';
 import { PaginationMovieAction } from '../../redux/Slices/paginationMovieSlice';
@@ -104,7 +104,7 @@ const MoviesList = () => {
   }, []);
 
   return (
-    <div className={styles.moviesListBase} onClick={CloseSearchPanel}>
+    <div className={styles.moviesListBase} onClick={closeSearchPanel}>
       {paginationFiltered.total_results > 1 && <ProgressBar observerPosition={observer_position} />}
       {(loadingStateMovies || loadingStateGenres) && !moviesFiltered.length ? (
         <div className={styles.spinner}>

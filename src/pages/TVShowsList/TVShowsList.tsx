@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from 'react';
+import { FC, useEffect, useRef } from 'react';
 
 import { debounce } from 'lodash';
 import { FadeLoader } from 'react-spinners';
@@ -6,7 +6,7 @@ import { FadeLoader } from 'react-spinners';
 import ProgressBar from '../../components/ProgressBar/ProgressBar';
 import TVShowCard from '../../components/TVShowCard/TVShowCard';
 import { LanguageEnum } from '../../enums/languageEnum';
-import { CloseSearchPanel } from '../../helpers/CloseSearchPanel';
+import { closeSearchPanel } from '../../helpers/CloseSearchPanel';
 import { TVShowFiltering } from '../../helpers/TVShowFilter';
 import { setChosenPageTVShow } from '../../redux/Slices/chosenPageSlice';
 import { PaginationTVShowAction } from '../../redux/Slices/paginationTVShowSlice';
@@ -204,7 +204,7 @@ const TVShowsList: FC = () => {
           <FadeLoader color="#9d9deb" />
         </div>
       ) : (
-        <div className={styles.movieListContainer} onClick={CloseSearchPanel}>
+        <div className={styles.movieListContainer} onClick={closeSearchPanel}>
           {tvShowsFiltered.length ? (
             tvShowsFiltered.map((tvShow, index) => <TVShowCard key={index} tvShow={tvShow} />)
           ) : (

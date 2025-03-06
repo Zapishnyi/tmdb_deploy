@@ -2,16 +2,16 @@ export const urlBase = 'https://api.themoviedb.org/3';
 
 export const url = {
   movie: {
-    genres: '/genre/movie/list',
+    genres: (language: string) => `/genre/movie/list?language=${language}`,
     allByGenres: (query: string): string => `/discover/movie${query}`,
     allByTitle: (query: string): string => `/search/movie${query}`,
     oneById: (id: number, language: string): string => `/movie/${id}?language=${language}`,
     credits: (id: number, language: string): string => `/movie/${id}/credits?language=${language}`,
     images: (id: number): string => `/movie/${id}/images`,
-    videos: (id: number): string => `/movie/${id}/videos`,
+    videos: (id: number, language: string): string => `/movie/${id}/videos?language=${language}`,
   },
   tvShow: {
-    genres: '/genre/tv/list',
+    genres: (language: string) => `/genre/tv/list?language=${language}`,
     allByGenres: (query: string): string => `/discover/tv${query}`,
     allByTitle: (query: string): string => `/search/tv${query}`,
     oneById: (id: number, query: string): string => `/tv/${id}?${query}`,

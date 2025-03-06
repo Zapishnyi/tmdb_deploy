@@ -2,6 +2,7 @@ import { FC } from 'react';
 
 import { LanguageEnum } from '../../enums/languageEnum';
 import { setLanguage } from '../../redux/Slices/languageSlice';
+import { MoviesDetailsActions } from '../../redux/Slices/movieDetailsSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
 
 import styles from './LanguageSelector.module.css';
@@ -11,6 +12,7 @@ const LanguageSelector: FC = () => {
   const dispatch = useAppDispatch();
   const handleChange = () => {
     dispatch(setLanguage(Object.values(LanguageEnum).filter((item) => item !== language)[0]));
+    dispatch(MoviesDetailsActions.clearFilmsDetails());
   };
   return (
     <div className={styles.language} onClick={handleChange}>

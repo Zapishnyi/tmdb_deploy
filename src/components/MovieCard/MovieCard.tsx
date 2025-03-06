@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import StarRatings from 'react-star-ratings';
 
 import { errorImage } from '../../constants/errorImagePath';
-import { CloseSearchPanel } from '../../helpers/CloseSearchPanel';
+import { closeSearchPanel } from '../../helpers/CloseSearchPanel';
 import { SearchFade } from '../../helpers/SearchFade';
 import ViewTransitionHandle from '../../helpers/ViewTransitionHandle';
 import IMovie from '../../models/IMovie';
@@ -27,7 +27,7 @@ const MovieCard: FC<IProps> = memo(({ movie }) => {
   const movieChoseHandler = () => {
     dispatch(MoviesActions.setChosenMovie(movie));
     SearchFade();
-    CloseSearchPanel();
+    closeSearchPanel();
     ViewTransitionHandle('/movie_info', navigate);
   };
 

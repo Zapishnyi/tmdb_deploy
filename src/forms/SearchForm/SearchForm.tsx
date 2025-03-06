@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import MagnifyingGlassBtn from '../../components/MagnifyingGlassBtn/MagnifyingGlassBtn';
-import { CloseSearchPanel } from '../../helpers/CloseSearchPanel';
+import { closeSearchPanel } from '../../helpers/CloseSearchPanel';
 import { SearchFade } from '../../helpers/SearchFade';
 import { setChosenPageMovie, setChosenPageTVShow } from '../../redux/Slices/chosenPageSlice';
 import { SearchActions } from '../../redux/Slices/searchSlice';
@@ -65,7 +65,7 @@ const SearchForm: FC = () => {
         : SearchActions.setTVShowSearchName(formData.searchNameTVShow),
     );
     SearchFade();
-    CloseSearchPanel();
+    closeSearchPanel();
     navigate(isMovie ? '/movies' : '/tv_shows');
   };
 
@@ -73,7 +73,7 @@ const SearchForm: FC = () => {
     dispatch(isMovie ? setChosenPageMovie(1) : setChosenPageTVShow(1));
     dispatch(isMovie ? SearchActions.setChosenGenresMoviesId([]) : SearchActions.setChosenGenresTVShowsId([]));
     SearchFade();
-    CloseSearchPanel();
+    closeSearchPanel();
     for (const item of Array.from(document.getElementsByClassName(styles.genreInput)) as HTMLInputElement[]) {
       item.checked = false;
     }

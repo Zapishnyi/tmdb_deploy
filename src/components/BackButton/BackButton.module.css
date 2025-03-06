@@ -1,7 +1,8 @@
 .backButton {
   position: fixed;
   bottom: 20px;
-  left: calc(50% - 50px);
+  left: 50%;
+  transform: translateX(-50%);
   background: var(--buttons_background_color);
   width: fit-content;
   cursor: pointer;

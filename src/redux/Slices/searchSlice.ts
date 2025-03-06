@@ -4,6 +4,7 @@ import { AxiosError } from 'axios';
 import IErrorResponse from '../../models/IErrorResponse';
 import IGenre from '../../models/IGenre';
 import { get } from '../../services/getTMDBData.api.service';
+import { RootState } from '../store';
 
 interface IGenresSlice {
   searchNameMovie: string;
@@ -26,8 +27,9 @@ const initialState: IGenresSlice = {
 };
 
 const loadMovieGenres = createAsyncThunk('genres/loadMovieGenres', async (_, thunkAPI) => {
+  const state = thunkAPI.getState() as RootState;
   try {
-    const genres = await get.movie.genres.then(({ genres }) => genres);
+    const genres = await get.movie.genres(state.Language.language).then(({ genres }) => genres);
     return thunkAPI.fulfillWithValue(genres);
   } catch (e) {
     const error = e as AxiosError<IErrorResponse>;
@@ -38,8 +40,9 @@ const loadMovieGenres = createAsyncThunk('genres/loadMovieGenres', async (_, thu
 });
 
 const loadTVShowsGenres = createAsyncThunk('genres/loadTVShowGenres', async (_, thunkAPI) => {
+  const state = thunkAPI.getState() as RootState;
   try {
-    const genres = await get.tvShow.genres.then(({ genres }) => genres);
+    const genres = await get.tvShow.genres(state.Language.language).then(({ genres }) => genres);
     return thunkAPI.fulfillWithValue(genres);
   } catch (e) {
     const error = e as AxiosError<IErrorResponse>;

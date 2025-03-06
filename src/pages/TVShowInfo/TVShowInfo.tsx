@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 import { AxiosError } from 'axios';
 import { useLocation } from 'react-router-dom';
 import StarRatings from 'react-star-ratings';
@@ -13,7 +13,7 @@ import ImagePreview from '../../components/MovieImagePreview/ImagePreview';
 import Season from '../../components/Season/Season';
 import { errorImage } from '../../constants/errorImagePath';
 import { urlImage } from '../../constants/tmdbURLS';
-import { CloseSearchPanel } from '../../helpers/CloseSearchPanel';
+import { closeSearchPanel } from '../../helpers/CloseSearchPanel';
 import IErrorResponse from '../../models/IErrorResponse';
 import ITVShowDetails from '../../models/ITVShowDetails';
 import ITVShowEpisode from '../../models/ITVShowEpisode';
@@ -53,7 +53,7 @@ const TVShowInfo: FC = () => {
 
   console.log('tvShow', tvShow);
   return (
-    <div className={styles.base} onClick={CloseSearchPanel}>
+    <div className={styles.base} onClick={closeSearchPanel}>
       {tvShow && (
         <div className={styles.scrollContainer}>
           <div className={styles.container}>

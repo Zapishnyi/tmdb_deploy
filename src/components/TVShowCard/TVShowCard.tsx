@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import StarRatings from 'react-star-ratings';
 
 import { errorImage } from '../../constants/errorImagePath';
-import { CloseSearchPanel } from '../../helpers/CloseSearchPanel';
+import { closeSearchPanel } from '../../helpers/CloseSearchPanel';
 import { SearchFade } from '../../helpers/SearchFade';
 import ViewTransitionHandle from '../../helpers/ViewTransitionHandle';
 import ITVShow from '../../models/ITVShow';
@@ -29,7 +29,7 @@ const TVShowCard: FC<IProps> = memo(({ tvShow }) => {
     dispatch(TVShowsActions.setChosenTVShow(tvShow));
 
     SearchFade();
-    CloseSearchPanel();
+    closeSearchPanel();
     ViewTransitionHandle('/tv_show_info', navigate);
   };
 

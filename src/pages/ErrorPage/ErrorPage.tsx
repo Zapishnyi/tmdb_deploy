@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 import { Link } from 'react-router-dom';
 
@@ -9,7 +9,7 @@ const ErrorPage: FC = () => {
     <div className={styles.errorPageWrapper}>
       <h1>Something went wrong, this page does not exist</h1>
       <>
-        <Link to={'/movies'}>Return to HOME Page</Link>
+        <Link to={'/movies'}>Return to MOVIES Page</Link>
       </>
     </div>
   );

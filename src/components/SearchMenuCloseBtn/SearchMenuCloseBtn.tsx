@@ -1,12 +1,12 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 
-import { CloseSearchPanel } from '../../helpers/CloseSearchPanel';
+import { closeSearchPanel } from '../../helpers/CloseSearchPanel';
 
 import styles from './SearchMenuCloseBtn.module.css';
 
 const SearchMenuCloseBtn: FC = () => {
   const clickHandle = () => {
-    CloseSearchPanel();
+    closeSearchPanel();
   };
 
   return (
