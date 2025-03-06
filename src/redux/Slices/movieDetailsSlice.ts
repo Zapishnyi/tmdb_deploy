@@ -3,8 +3,9 @@ import { AxiosError } from 'axios';
 
 import { ICredits } from '../../models/ICredits';
 import IErrorResponse from '../../models/IErrorResponse';
-import IImages from '../../models/IImagesRes';
+import IImages from '../../models/IImages';
 import IMovieDetails from '../../models/IMovieDetails';
+import IVideos from '../../models/IVideos';
 import { get } from '../../services/getTMDBData.api.service';
 import { RootState } from '../store';
 
@@ -12,6 +13,7 @@ interface IMoviesDetailsSlice {
   movies: IMovieDetails[];
   credits: ICredits[];
   images: IImages[];
+  videos: IVideos[];
   loadingStateDetails: boolean;
 }
 
@@ -19,6 +21,7 @@ const initialState: IMoviesDetailsSlice = {
   movies: [],
   credits: [],
   images: [],
+  videos: [],
   loadingStateDetails: false,
 };
 
@@ -49,10 +52,23 @@ const getCredits = createAsyncThunk('movieDetails/getCredits', async (movie_id: 
 });
 
 const getImages = createAsyncThunk('movieDetails/getImages', async (movie_id: number, thunkAPI) => {
-  const state = thunkAPI.getState() as RootState;
   try {
-    const images = await get.movie.images(movie_id, state.Language.language);
-    return thunkAPI.fulfillWithValue({ id: movie_id, ...images });
+    const images = await get.movie.images(movie_id);
+
+    return thunkAPI.fulfillWithValue(images);
+  } catch (e) {
+    const error = e as AxiosError<IErrorResponse>;
+    return thunkAPI.rejectWithValue(error.response?.data.status_message);
+  } finally {
+    thunkAPI.dispatch(MoviesDetailsActions.setLoadingState(false));
+  }
+});
+
+const getVideos = createAsyncThunk('movieDetails/getVideos', async (movie_id: number, thunkAPI) => {
+  try {
+    const videos = await get.movie.videos(movie_id);
+    console.log('videos', videos);
+    return thunkAPI.fulfillWithValue(videos);
   } catch (e) {
     const error = e as AxiosError<IErrorResponse>;
     return thunkAPI.rejectWithValue(error.response?.data.status_message);
@@ -65,6 +81,15 @@ export const movieDetailsSlice = createSlice({
   name: 'movieDetails',
   initialState,
   reducers: {
+    clearFilms: (state) => {
+      state.movies = [];
+    },
+    clearCredits: (state) => {
+      state.credits = [];
+    },
+    clearImages: (state) => {
+      state.images = [];
+    },
     setLoadingState: (state, action) => {
       state.loadingStateDetails = action.payload;
     },
@@ -80,6 +105,9 @@ export const movieDetailsSlice = createSlice({
       .addCase(getImages.fulfilled, (state, action) => {
         state.images = [...state.images, action.payload];
       })
+      .addCase(getVideos.fulfilled, (state, action) => {
+        state.videos = [...state.videos, action.payload];
+      })
       .addMatcher(isRejected(getMovieDetails, getCredits, getImages), (state, action) => {
         console.error('Movie details receive sequence failed with error:', action.payload);
       })
@@ -94,4 +122,5 @@ export const MoviesDetailsActions = {
   getMovieDetails,
   getCredits,
   getImages,
+  getVideos,
 };

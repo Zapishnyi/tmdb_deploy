@@ -1,12 +1,18 @@
+import * as React from 'react';
 import { FC, useEffect } from 'react';
 
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import StarRatings from 'react-star-ratings';
 
+import AvatarIcon from '../../components/AvatarIcon/AvatarIcon';
 import BackButton from '../../components/BackButton/BackButton';
 import GenresBadgeSet from '../../components/GenresBadgeSet/GenresBadgeSet';
 import ImagePreview from '../../components/MovieImagePreview/ImagePreview';
+import YouTubeVideo from '../../components/YouTobeVideo/YouTubeVideo';
 import { errorImage } from '../../constants/errorImagePath';
+import { urlImage } from '../../constants/tmdbURLS';
 import { CloseSearchPanel } from '../../helpers/CloseSearchPanel';
 import { getLanguageName } from '../../helpers/GetLanguageName';
 import { MoviesDetailsActions } from '../../redux/Slices/movieDetailsSlice';
@@ -17,11 +23,13 @@ import styles from './MovieInfo.module.css';
 const MovieInfo: FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { credits, images, movies, loadingStateDetails } = useAppSelector((state) => state.MovieDetails);
-  const movieCosen = movies.filter((e) => e.id === Number(chosenMovie?.id))[0];
+  const { chosenMovie } = useAppSelector((state) => state.Movies);
+  const { language } = useAppSelector((state) => state.Language);
+  const { credits, images, movies, videos, loadingStateDetails } = useAppSelector((state) => state.MovieDetails);
+  const movieDetailsChosen = movies.filter((e) => e.id === Number(chosenMovie?.id))[0];
   const creditsChosen = credits.filter((e) => e.id === Number(chosenMovie?.id))[0];
   const imagesChosen = images.filter((e) => e.id === Number(chosenMovie?.id))[0];
-  const { chosenMovie } = useAppSelector((state) => state.Movies);
+  const videosChosen = videos.filter((e) => e.id === Number(chosenMovie?.id))[0];
 
   useEffect(() => {
     if (!chosenMovie) {
@@ -32,8 +40,17 @@ const MovieInfo: FC = () => {
       dispatch(MoviesDetailsActions.getMovieDetails(chosenMovie?.id));
       dispatch(MoviesDetailsActions.getCredits(chosenMovie?.id));
       dispatch(MoviesDetailsActions.getImages(chosenMovie?.id));
+      dispatch(MoviesDetailsActions.getVideos(chosenMovie?.id));
     }
-  }, []);
+  }, [language]);
+  const [expanded, setExpanded] = React.useState<string | false>(false);
+
+  const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+  const handleExpandChange = (panel: string) => {
+    setExpanded(panel === expanded ? false : panel);
+  };
 
   return (
     <div className={styles.base} onClick={CloseSearchPanel}>
@@ -54,7 +71,7 @@ const MovieInfo: FC = () => {
               </div>
               <div className={styles.info}>
                 <div>
-                  <h1>{chosenMovie.title}</h1>
+                  <h1>{movieDetailsChosen?.title}</h1>
                   <StarRatings
                     rating={(chosenMovie.vote_average * 6) / 10}
                     starDimension="20px"
@@ -67,13 +84,141 @@ const MovieInfo: FC = () => {
 
                 <p>Release date: {chosenMovie.release_date}</p>
                 <p>Language: {getLanguageName(chosenMovie.original_language)}</p>
-                <a href={tvShow.homepage} target="blank" rel="noopener noreferrer">
-                  Homepage
-                </a>
+                {movieDetailsChosen && (
+                  <>
+                    {!!movieDetailsChosen.homepage && (
+                      <a href={movieDetailsChosen.homepage} target="blank" rel="noopener noreferrer">
+                        Homepage
+                      </a>
+                    )}
+                    <p>Budget: {movieDetailsChosen.budget} USD</p>
+                  </>
+                )}
+
                 {chosenMovie.adult && <p className={styles.adultContentWarning}>Parental advisory: explicit content</p>}
               </div>
             </div>
             <p className={styles.overview}>{chosenMovie.overview}</p>
+            <div className={styles.accordion}>
+              {movieDetailsChosen?.production_companies?.length > 0 && (
+                <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1-content" id="panel1-header">
+                    <span>Production companies</span>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <div
+                      className={`${styles.production_companies} ${styles.panel}`}
+                      onClick={() => {
+                        handleExpandChange('panel1');
+                      }}
+                    >
+                      {movieDetailsChosen.production_companies.map((e, i) =>
+                        e.logo_path ? (
+                          <img key={i} src={urlImage(e.logo_path)} alt={e.name} />
+                        ) : (
+                          <p key={i}>{e.name}</p>
+                        ),
+                      )}
+                    </div>
+                  </AccordionDetails>
+                </Accordion>
+              )}
+              {!!creditsChosen?.cast?.length && (
+                <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel2-content" id="panel2-header">
+                    <span>Cast</span>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <div
+                      className={`${styles.cast} ${styles.panel}`}
+                      onClick={() => {
+                        handleExpandChange('panel2');
+                      }}
+                    >
+                      {creditsChosen.cast.map((e, i) => (
+                        <AvatarIcon key={i} name={e.name} iconPath={e.profile_path} nameAlt={`as ${e.character}`} />
+                      ))}
+                    </div>
+                  </AccordionDetails>
+                </Accordion>
+              )}
+              {!!creditsChosen?.crew?.length && (
+                <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel3-content" id="panel3-header">
+                    <span>Crew</span>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <div
+                      className={`${styles.cast} ${styles.panel}`}
+                      onClick={() => {
+                        handleExpandChange('panel3');
+                      }}
+                    >
+                      {creditsChosen.crew.map((e, i) => (
+                        <AvatarIcon key={i} name={e.name} iconPath={e.profile_path} />
+                      ))}
+                    </div>
+                  </AccordionDetails>
+                </Accordion>
+              )}
+              {!!imagesChosen?.backdrops?.length && (
+                <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel4-content" id="panel4-header">
+                    <span>Images</span>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <div
+                      className={`${styles.images} ${styles.panel}`}
+                      onClick={() => {
+                        handleExpandChange('panel4');
+                      }}
+                    >
+                      {imagesChosen.backdrops.map((e, i) => (
+                        <img key={i} src={urlImage(e.file_path)} alt={chosenMovie.original_title} />
+                      ))}
+                    </div>
+                  </AccordionDetails>
+                </Accordion>
+              )}
+              {!!imagesChosen?.posters?.length && (
+                <Accordion expanded={expanded === 'panel5'} onChange={handleChange('panel5')}>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel5-content" id="panel5-header">
+                    <span>Posters</span>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <div
+                      className={`${styles.posters} ${styles.panel}`}
+                      onClick={() => {
+                        handleExpandChange('panel5');
+                      }}
+                    >
+                      {imagesChosen.posters.map((e, i) => (
+                        <img key={i} src={urlImage(e.file_path)} alt={chosenMovie.original_title} />
+                      ))}
+                    </div>
+                  </AccordionDetails>
+                </Accordion>
+              )}
+              {!!videosChosen?.results?.length && (
+                <Accordion expanded={expanded === 'panel6'} onChange={handleChange('panel6')}>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel6-content" id="panel6-header">
+                    <span>Videos</span>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <div
+                      className={`${styles.videos} ${styles.panel}`}
+                      onClick={() => {
+                        handleExpandChange('panel5');
+                      }}
+                    >
+                      {videosChosen.results.map((e, i) => (
+                        <YouTubeVideo key={i} videoInfo={e} />
+                      ))}
+                    </div>
+                  </AccordionDetails>
+                </Accordion>
+              )}
+            </div>
           </div>
           <div className={styles.backButton}>
             <BackButton to={'/movies'} />

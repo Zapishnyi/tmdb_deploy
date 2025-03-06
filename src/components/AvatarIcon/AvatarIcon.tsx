@@ -10,9 +10,10 @@ import styles from './AvatarIcon.module.css';
 interface IProps {
   name: string;
   iconPath: string | null;
+  nameAlt?: string;
 }
 
-const AvatarIcon: FC<IProps> = ({ iconPath, name }) => {
+const AvatarIcon: FC<IProps> = ({ iconPath, name, nameAlt }) => {
   return (
     <div className={styles.avatar}>
       {iconPath ? (
@@ -21,6 +22,7 @@ const AvatarIcon: FC<IProps> = ({ iconPath, name }) => {
         <Avatar {...stringAvatar(name)} />
       )}
       <p>{name}</p>
+      {(!!nameAlt || nameAlt !== 'as') && <p>{nameAlt}</p>}
     </div>
   );
 };

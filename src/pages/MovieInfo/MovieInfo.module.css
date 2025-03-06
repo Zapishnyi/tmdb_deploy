@@ -64,9 +64,65 @@
         text-align: justify;
       }
 
-      .backButton {
-        height: 40px;
+      .accordion {
+        span {
+          font-size: calc((100vw - 375px) * 0.007512 + 10px);
+        }
+
+
+        >div {
+          background: var(--background_color_lighter2);
+
+        }
+
+        .panel {
+          display: flex;
+
+          width: 100%;
+          justify-content: space-evenly;
+          align-items: flex-start;
+          flex-wrap: wrap;
+          padding: 2vw 1vh;
+          gap: 2vw;
+        }
+
+
+        .production_companies {
+          background: rgb(220, 220, 220);
+          border-radius: 20px;
+
+          p {
+            color: black;
+          }
+
+          >img {
+            width: calc(5vh + 15vw);
+          }
+        }
+
+        .images {
+          img {
+            width: 350px;
+          }
+        }
+
+        .posters {
+          img {
+            width: 250px;
+          }
+        }
+
+
+
+
       }
+
+
+    }
+
+    .backButton {
+      height: 80px;
+      width: 100%;
     }
   }
 }
