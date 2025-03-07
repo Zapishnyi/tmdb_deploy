@@ -6,7 +6,6 @@ import StarRatings from 'react-star-ratings';
 import { errorImage } from '../../constants/errorImagePath';
 import { closeSearchPanel } from '../../helpers/CloseSearchPanel';
 import { SearchFade } from '../../helpers/SearchFade';
-import ViewTransitionHandle from '../../helpers/ViewTransitionHandle';
 import ITVShow from '../../models/ITVShow';
 import { PaginationTVShowAction } from '../../redux/Slices/paginationTVShowSlice';
 import { TVShowsActions } from '../../redux/Slices/tvShowsSlice';
@@ -30,7 +29,7 @@ const TVShowCard: FC<IProps> = memo(({ tvShow }) => {
 
     SearchFade();
     closeSearchPanel();
-    ViewTransitionHandle('/tv_show_info', navigate);
+    navigate('/tv_show_info');
   };
 
   const hoverHandler = (e: React.MouseEvent<HTMLDivElement>) => {

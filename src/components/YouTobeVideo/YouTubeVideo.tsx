@@ -18,7 +18,7 @@ const YouTubeVideo: FC<IProps> = ({ videoInfo }) => {
     <div className={styles.videoWrapper} onClick={clickHandler}>
       {isLoaded ? (
         <iframe
-          src={`https://www.youtube.com/embed/${videoInfo.key}`}
+          src={`https://www.youtube.com/embed/${videoInfo.key}?autoplay=1`}
           title={videoInfo.name}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen

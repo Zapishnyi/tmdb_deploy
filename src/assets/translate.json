@@ -54,5 +54,13 @@
   "Adult_content": {
     "us,en": "Parental advisory: explicit content",
     "uk": "Попередження: експлицитний контент"
+  },
+  "Error_message": {
+    "us,en": "Something went wrong, this page does not exist",
+    "uk": "Щось пішло не так, ця сторінка не існує"
+  },
+  "Error_action": {
+    "us,en": "Return to MOVIES Page",
+    "uk": "Повернутися до сторінки Фільми"
   }
 }

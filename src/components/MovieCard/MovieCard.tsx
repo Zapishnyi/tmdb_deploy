@@ -6,7 +6,6 @@ import StarRatings from 'react-star-ratings';
 import { errorImage } from '../../constants/errorImagePath';
 import { closeSearchPanel } from '../../helpers/CloseSearchPanel';
 import { SearchFade } from '../../helpers/SearchFade';
-import ViewTransitionHandle from '../../helpers/ViewTransitionHandle';
 import IMovie from '../../models/IMovie';
 import { MoviesActions } from '../../redux/Slices/moviesSlice';
 import { PaginationMovieAction } from '../../redux/Slices/paginationMovieSlice';
@@ -28,7 +27,7 @@ const MovieCard: FC<IProps> = memo(({ movie }) => {
     dispatch(MoviesActions.setChosenMovie(movie));
     SearchFade();
     closeSearchPanel();
-    ViewTransitionHandle('/movie_info', navigate);
+    navigate('/movie_info');
   };
 
   const hoverHandler = (e: React.MouseEvent<HTMLDivElement>) => {

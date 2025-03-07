@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 import { LanguageEnum } from '../../enums/languageEnum';
-import { setLanguage } from '../../redux/Slices/languageSlice';
+import { languageActions } from '../../redux/Slices/languageSlice';
 import { MoviesDetailsActions } from '../../redux/Slices/movieDetailsSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
 
@@ -11,7 +11,7 @@ const LanguageSelector: FC = () => {
   const { language } = useAppSelector((state) => state.Language);
   const dispatch = useAppDispatch();
   const handleChange = () => {
-    dispatch(setLanguage(Object.values(LanguageEnum).filter((item) => item !== language)[0]));
+    dispatch(languageActions.setLanguage(Object.values(LanguageEnum).filter((item) => item !== language)[0]));
     dispatch(MoviesDetailsActions.clearFilmsDetails());
   };
   return (

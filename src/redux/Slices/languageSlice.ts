@@ -4,7 +4,7 @@ import { LanguageEnum } from '../../enums/languageEnum';
 import { IAppLanguage } from '../../models/IAppLanguage';
 
 const initialState: IAppLanguage = {
-  language: JSON.parse(localStorage.getItem('language') || '"us"') as LanguageEnum,
+  language: JSON.parse(localStorage.getItem('language') || '"us,en"') as LanguageEnum,
 };
 
 export const languageSlice = createSlice({
@@ -18,4 +18,4 @@ export const languageSlice = createSlice({
   },
 });
 
-export const { setLanguage } = languageSlice.actions;
+export const languageActions = languageSlice.actions;

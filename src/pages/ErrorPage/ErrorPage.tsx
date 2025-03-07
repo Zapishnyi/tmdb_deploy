@@ -2,14 +2,18 @@ import { FC } from 'react';
 
 import { Link } from 'react-router-dom';
 
+import translate from '../../assets/translate.json';
+import { useAppSelector } from '../../redux/store';
+
 import styles from './ErrorPage.module.css';
 
 const ErrorPage: FC = () => {
+  const { language } = useAppSelector((state) => state.Language);
   return (
     <div className={styles.errorPageWrapper}>
-      <h1>Something went wrong, this page does not exist</h1>
+      <h1>{translate.Error_message[language]}</h1>
       <>
-        <Link to={'/movies'}>Return to MOVIES Page</Link>
+        <Link to={'/movies'}>{translate.Error_action[language]}</Link>
       </>
     </div>
   );

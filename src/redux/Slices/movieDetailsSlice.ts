@@ -72,7 +72,6 @@ const getVideos = createAsyncThunk('movieDetails/getVideos', async (movie_id: nu
   const state = thunkAPI.getState() as RootState;
   try {
     const videos = await get.movie.videos(movie_id, state.Language.language);
-    console.log('videos', videos);
     return thunkAPI.fulfillWithValue(videos);
   } catch (e) {
     const error = e as AxiosError<IErrorResponse>;

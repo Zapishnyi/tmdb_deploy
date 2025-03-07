@@ -17,6 +17,8 @@
     align-items: center;
 
     .logo {
+      cursor: pointer;
+
       img {
         width: 70px;
       }
@@ -43,7 +45,6 @@
         li {
           p {
             cursor: pointer;
-
             font-size: calc((100vw - 375px) * 0.007512 + 16px);
           }
         }
@@ -54,21 +55,12 @@
         height: 3px;
         background: var(--contrast_element_color);
         border-radius: 15px;
-        width: calc(((100vw - 375px) * 0.007512 + 16px) * 3.2);
         left: 0;
         transition:
-          transform 0.3s ease-in-out,
-          width 0.3s ease-in-out;
-        transform: translateX(0);
+          transform 0.3s ease-in-out;
       }
 
-      .right {
-        transition:
-          transform 0.3s ease-in-out,
-          width 0.3s ease-in-out;
-        transform: translateX(calc(5vw + calc(((100vw - 375px) * 0.007512 + 16px) * 3.2)));
-        width: calc(((100vw - 375px) * 0.007512 + 16px) * 4.3);
-      }
+
     }
 
     .instruments {

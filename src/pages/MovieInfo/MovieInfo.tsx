@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { FadeLoader } from 'react-spinners';
 import StarRatings from 'react-star-ratings';
 
-import translate from '../../assets/translation/translate.json';
+import translate from '../../assets/translate.json';
 import AvatarIcon from '../../components/AvatarIcon/AvatarIcon';
 import BackButton from '../../components/BackButton/BackButton';
 import GenresBadgeSet from '../../components/GenresBadgeSet/GenresBadgeSet';
