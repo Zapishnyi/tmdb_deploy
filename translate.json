@@ -1,0 +1,58 @@
+{
+  "Movies": {
+    "us,en": "Movies",
+    "uk": "Фільми"
+  },
+  "TV_Shows": {
+    "us,en": "TV Shows",
+    "uk": "Серіали"
+  },
+  "Release_date": {
+    "us,en": "Release date:",
+    "uk": "Дата випуску:"
+  },
+  "Language": {
+    "us,en": "Language:",
+    "uk": "Мова:"
+  },
+  "Homepage": {
+    "us,en": "Homepage:",
+    "uk": "Сайт:"
+  },
+  "Budget": {
+    "us,en": "Budget:",
+    "uk": "Бюджет:"
+  },
+  "Studios": {
+    "us,en": "Studios",
+    "uk": "Студії"
+  },
+  "Cast": {
+    "us,en": "Cast",
+    "uk": "Актори"
+  },
+  "Crew": {
+    "us,en": "Crew",
+    "uk": "Знімальна група"
+  },
+  "Images": {
+    "us,en": "Images",
+    "uk": "Зображення"
+  },
+  "Videos": {
+    "us,en": "Videos",
+    "uk": "Відео"
+  },
+  "Posters": {
+    "us,en": "Posters",
+    "uk": "Постери"
+  },
+  "Return": {
+    "us,en": "Return",
+    "uk": "Повернутися"
+  },
+  "Adult_content": {
+    "us,en": "Parental advisory: explicit content",
+    "uk": "Попередження: експлицитний контент"
+  }
+}
