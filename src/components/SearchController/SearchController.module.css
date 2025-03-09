@@ -1,0 +1,63 @@
+.searchButton {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 20dvh;
+    top: 0;
+    transition: top 0.5s ease-in-out;
+
+    > :nth-child(1) {
+        opacity: 1;
+        transition: opacity 0.5s;
+    }
+
+    > :nth-child(2) {
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    > :nth-child(1) .changeOver {
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    > :nth-child(1) .changeOver {
+        opacity: 1;
+        transition: opacity 0.3s;
+    }
+
+}
+
+.searchPanel {
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%, 0);
+    top: 10vh;
+    /* height: 100%; */
+    display: none;
+    opacity: 0;
+
+
+}
+
+.visible {
+    display: flex;
+    opacity: 1;
+    transition: 0.5s ease-in-out;
+}
+
+.changeOver {
+    top: calc(-10dvh);
+    transition: top 0.3s ease-in-out;
+
+    > :nth-child(1) {
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    > :nth-child(2) {
+        opacity: 1;
+        transition: opacity 0.3s;
+    }
+}

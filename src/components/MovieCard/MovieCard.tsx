@@ -5,7 +5,6 @@ import StarRatings from 'react-star-ratings';
 
 import { errorImage } from '../../constants/errorImagePath';
 import { closeSearchPanel } from '../../helpers/CloseSearchPanel';
-import { SearchFade } from '../../helpers/SearchFade';
 import IMovie from '../../models/IMovie';
 import { MoviesActions } from '../../redux/Slices/moviesSlice';
 import { PaginationMovieAction } from '../../redux/Slices/paginationMovieSlice';
@@ -25,7 +24,7 @@ const MovieCard: FC<IProps> = memo(({ movie }) => {
 
   const movieChoseHandler = () => {
     dispatch(MoviesActions.setChosenMovie(movie));
-    SearchFade();
+    // searchFade();
     closeSearchPanel();
     navigate('/movie_info');
   };

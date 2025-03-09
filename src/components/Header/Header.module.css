@@ -6,6 +6,7 @@
   display: flex;
   flex-direction: column;
 
+
   .container {
     display: flex;
     position: relative;
@@ -16,52 +17,9 @@
     justify-content: space-between;
     align-items: center;
 
-    .logo {
-      cursor: pointer;
-
-      img {
-        width: 70px;
-      }
-    }
-
-    .searchComponent {
-      position: absolute;
-      left: 50%;
-      transform: translate(-50%, 0);
-      top: 10vh;
-      height: 100%;
-      display: none;
-      opacity: 0;
-    }
-
-    .menu_wrapper {
-      position: relative;
-
-      ul {
-        display: flex;
-        list-style: none;
-        gap: 5vw;
-
-        li {
-          p {
-            cursor: pointer;
-            font-size: calc((100vw - 375px) * 0.007512 + 16px);
-          }
-        }
-      }
-
-      .underline {
-        position: absolute;
-        height: 3px;
-        background: var(--contrast_element_color);
-        border-radius: 15px;
-        left: 0;
-        transition:
-          transform 0.3s ease-in-out;
-      }
 
 
-    }
+
 
     .instruments {
       display: flex;
@@ -69,56 +27,16 @@
       height: 100%;
       gap: 2vw;
 
-      .searchButton {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        height: 20dvh;
-        top: 0;
-        transition: top 0.5s ease-in-out;
 
-        > :first-child {
-          opacity: 1;
-          transition: opacity 0.5s;
-        }
 
-        > :last-child {
-          opacity: 0;
-          transition: opacity 0.3s;
-        }
-
-        > :first-child :global(.changeOver) {
-          opacity: 0;
-          transition: opacity 0.3s;
-        }
-
-        > :last-child :global(.changeOver) {
-          opacity: 1;
-          transition: opacity 0.3s;
-        }
-      }
-
-      :global(.changeOver) {
-        > :first-child {
-          opacity: 0;
-          transition: opacity 0.3s;
-        }
-
-        > :last-child {
-          opacity: 1;
-          transition: opacity 0.3s;
-        }
-      }
-
-      .themeUserContainer {
+      /* .themeUserContainer {
         display: flex;
         justify-content: space-between;
         align-items: center;
         width: fit-content;
         /*min-width: 97px;*/
-        gap: 2vw;
-      }
+      /* gap: 2vw;
+      } */
     }
 
     @media (width < 800px) {

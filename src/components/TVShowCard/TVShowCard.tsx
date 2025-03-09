@@ -5,7 +5,6 @@ import StarRatings from 'react-star-ratings';
 
 import { errorImage } from '../../constants/errorImagePath';
 import { closeSearchPanel } from '../../helpers/CloseSearchPanel';
-import { SearchFade } from '../../helpers/SearchFade';
 import ITVShow from '../../models/ITVShow';
 import { PaginationTVShowAction } from '../../redux/Slices/paginationTVShowSlice';
 import { TVShowsActions } from '../../redux/Slices/tvShowsSlice';
@@ -27,7 +26,7 @@ const TVShowCard: FC<IProps> = memo(({ tvShow }) => {
   const movieChoseHandler = () => {
     dispatch(TVShowsActions.setChosenTVShow(tvShow));
 
-    SearchFade();
+    // searchFade();
     closeSearchPanel();
     navigate('/tv_show_info');
   };

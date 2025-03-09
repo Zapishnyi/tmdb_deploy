@@ -1,0 +1,26 @@
+.menu_wrapper {
+    position: relative;
+
+    ul {
+        display: flex;
+        list-style: none;
+        gap: 5vw;
+
+        li {
+            p {
+                cursor: pointer;
+                font-size: calc((100vw - 375px) * 0.007512 + 16px);
+            }
+        }
+    }
+
+    .underline {
+        position: absolute;
+        height: 3px;
+        background: var(--contrast_element_color);
+        border-radius: 15px;
+        left: 0;
+        transition:
+            transform 0.3s ease-in-out;
+    }
+}

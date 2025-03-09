@@ -5,7 +5,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import MagnifyingGlassBtn from '../../components/MagnifyingGlassBtn/MagnifyingGlassBtn';
 import { closeSearchPanel } from '../../helpers/CloseSearchPanel';
-import { SearchFade } from '../../helpers/SearchFade';
 import { setChosenPageMovie, setChosenPageTVShow } from '../../redux/Slices/chosenPageSlice';
 import { SearchActions } from '../../redux/Slices/searchSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
@@ -64,7 +63,7 @@ const SearchForm: FC = () => {
         ? SearchActions.setMovieSearchName(formData.searchNameMovie)
         : SearchActions.setTVShowSearchName(formData.searchNameTVShow),
     );
-    SearchFade();
+    // searchFade();
     closeSearchPanel();
     navigate(isMovie ? '/movies' : '/tv_shows');
   };
@@ -72,8 +71,6 @@ const SearchForm: FC = () => {
   const genreChoiceNone = () => {
     dispatch(isMovie ? setChosenPageMovie(1) : setChosenPageTVShow(1));
     dispatch(isMovie ? SearchActions.setChosenGenresMoviesId([]) : SearchActions.setChosenGenresTVShowsId([]));
-    SearchFade();
-    closeSearchPanel();
     for (const item of Array.from(document.getElementsByClassName(styles.genreInput)) as HTMLInputElement[]) {
       item.checked = false;
     }
@@ -85,6 +82,8 @@ const SearchForm: FC = () => {
         navigate('movies');
         break;
     }
+    // searchFade();
+    closeSearchPanel();
   };
 
   const genreChoiceHandler = (element: ChangeEvent<HTMLInputElement>) => {

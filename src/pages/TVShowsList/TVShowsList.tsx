@@ -54,6 +54,7 @@ const TVShowsList: FC = () => {
         dispatch(PaginationTVShowAction.setScrollPosition(tvShowsListContainerRef.current?.scrollTop));
       }
     });
+    closeSearchPanel();
   };
 
   const scrollHandle = debounce(() => {

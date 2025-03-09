@@ -51,6 +51,7 @@ const MoviesList = () => {
         dispatch(PaginationMovieAction.setObserverPosition(Number(entry.target.className.match(/(?<=id_)\d*/))));
       }
     });
+    closeSearchPanel();
   };
 
   const scrollHandle = debounce(() => {
